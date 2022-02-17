@@ -7,7 +7,10 @@ cur.execute("CREATE TABLE IF NOT EXISTS posts (link text UNIQUE, description tex
 #will author be name or a user id number?
 #location as string or as two ints -> latitude, longitude also dont they have N/S and E/W
 
-cur.execute('''INSERT INTO posts VALUES ("https://www.youtube.com/watch?v=rEq1Z0bjdwc","Hello There","General Kenobi",53.4671,2.2342)''')
+try:
+    cur.execute('''INSERT INTO posts VALUES ("https://www.youtube.com/watch?v=rEq1Z0bjdwc","Hello There","General Kenobi",53.4671,2.2342)''')
+except sqlite3.Error as error:
+    print(error)
 
 con.commit()
 
