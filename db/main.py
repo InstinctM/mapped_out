@@ -12,7 +12,7 @@ Base=declarative_base()
 class post(Base):
     __tablename__="posts"
 
-    rowid=Column(Integer, primary_key=True) #this exists by defualy in sql tables
+    rowid=Column(Integer, primary_key=True) #this exists by defualt in sql tables
     link=Column(String,unique=True)
     description=Column(String)
     author=Column(String)
