@@ -12,11 +12,19 @@ Base=declarative_base()
 class post(Base):
     __tablename__="posts"
 
+    rowid=Column(Integer, primary_key=True) #this exists by defualy in sql tables
     link=Column(String,unique=True)
     description=Column(String)
     author=Column(String)
     longitude=Column(Float)
     latitude=Column(Float)
+
+    def __repr__(self):
+        return '<post ( rowid=%s , link=%s , description=%s , author=%s , longitude=%s , latitude=%s )> ' % (self.rowid,self.link,self.description,self.author,self.longitude,self.latitude)
+
+for post_entry in session.query(post):
+    print(repr(post_entry))
+
 
 
 
