@@ -3,6 +3,7 @@ import sqlite3
 con=sqlite3.connect('mapped_out.db')
 cur=con.cursor()
 
+#posts table
 cur.execute("CREATE TABLE IF NOT EXISTS posts (link text UNIQUE, description text, author text, longitude real, latitude real)")
 #will author be name or a user id number?
 #location as string or as two ints -> latitude, longitude also dont they have N/S and E/W
@@ -12,9 +13,24 @@ try:
 except sqlite3.Error as error:
     print(error)
 
-con.commit()
 
+#users table
+cur.execute("CREATE TABLE IF NOT EXISTS users (name text, accessToken text UNIQUE)")
+
+try:
+    cur.execute('''INSERT INTO users VALUES ("General Kenobi","69420")''')
+except sqlite3.Error as error:
+    print(error)
+
+
+
+con.commit()
+print("POSTS:")
 for row in cur.execute("SELECT * FROM posts"):
+    print(row)
+
+print("USERS:")
+for row in cur.execute("SELECT * FROM users"):
     print(row)
 
 con.close()
