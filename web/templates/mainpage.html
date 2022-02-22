@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>ogelbw</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='/styles/mainpage.css')}}">
 </head>
 <body class="lightGrey" style="width: 100%; height: 100%; padding: 0%; margin: 0%;">
 
@@ -41,7 +41,7 @@
 
     </ul>
 
-    <img src="Screenshot_1.png" style="display: block; width: 240px; height: 240px; margin-left: auto; margin-right: auto; ">
+    <img src="{{url_for('static', filename='/images/Screenshot_1.png')}}" style="display: block; width: 240px; height: 240px; margin-left: auto; margin-right: auto; ">
 
     <!-- Display box sould go here -->
 
