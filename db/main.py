@@ -45,21 +45,28 @@ for user_entry in session.query(user):
 opencageKey="06fee6e0f0fd4b82972c28992c487837"
 geocoder=OpenCageGeocode(opencageKey)
 
-def add_post(link, description, author, latitude=None, longitude=None, location=None):
+def add_post(p_link, p_description, p_author, p_latitude=None, p_longitude=None, p_location=None):
     #if given both coordinates and a text location (address) not going to check they are in the same place
 
-    assert ((longitude!=None and latitude!=None) or location!=None), "Incorrect location Data given"
+    assert ((p_longitude!=None and p_latitude!=None) or p_location!=None), "Incorrect location Data given"
 
-    if (longitude==None and latitude==None ) and location!=None:
-        result=forward_geocode(location)
+    if (p_longitude==None and p_latitude==None ) and p_location!=None:
+        result=forward_geocode(p_location)
         if result!=null:
-            pass
+            entry=post(link=p_link,description=p_description,latitude=result[0],longitude=result[1],location=p_location)
+            session.add(entry)
+            session.flush()
         else:
-            pass
+            print("unable to perform forward geocoding.") #TODO more informative error messages
 
-    elif (location==None) and (longitude!=None and latitude!=None):
-        pass
-
+    elif (p_location==None) and (p_longitude!=None and p_latitude!=None):
+        result=reverse_geocode(p_latitude,p_longitude)
+        if result!=null:
+            entry=post(link=p_link,description=p_description,latitude=p_latitude,longitude=p_longitude,location=result)
+            session.add(entry)
+            session.flush()
+        else:
+            print("Unable to perform reverse geocoding.") #TODO ^
 
 def forward_geocode(location):
     try:
