@@ -40,11 +40,3 @@ for user_entry in session.query(user):
     print(repr(user_entry))
 
 
-    
-
-
-
-
-
-
-
