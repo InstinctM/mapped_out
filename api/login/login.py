@@ -1,3 +1,4 @@
+from google.oauth2 import id_token
 import requests
 import secrets
 
@@ -5,6 +6,8 @@ import secrets
 class LoginAuthentication:
     """Handle user login authentication.
     """
+
+    GOOGLE_CLIENT_ID = ""
 
     def __init__(self, **kwargs):
         pass
@@ -48,7 +51,21 @@ class LoginAuthentication:
             return token
         return None
 
-    #@classmethod
-    #def googleLogin(cls, token):
-    #    redirectUrl = ""
-    #    return redirectUrl
+    @classmethod
+    def googleAuthenticate(cls, token):
+        """Takes google token as parameter.
+           Returns idinfo if successful. Returns None otherwise.
+        """
+        try:
+            idinfo = id_token.verify_oauth2_token(token, requests.Request(), cls.GOOGLE_CLIENT_ID)
+            userid = idinfo['sub']
+            print(userid)
+        except ValueError:
+            return None
+
+        return idinfo
+
+#    @classmethod
+#    def googleLogin(cls):
+#        redirectURL = ""
+#        return redirectURL
