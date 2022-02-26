@@ -1,0 +1,358 @@
+{
+    "documentation": "https://opencagedata.com/api",
+    "licenses": [
+        {
+            "name": "see attribution guide",
+            "url": "https://opencagedata.com/credits"
+        }
+    ],
+    "rate": {
+        "limit": 2500,
+        "remaining": 2498,
+        "reset": 1645660800
+    },
+    "results": [
+        {
+            "annotations": {
+                "DMS": {
+                    "lat": "53\u00b0 28' 3.01224'' N",
+                    "lng": "2\u00b0 14' 1.96008'' W"
+                },
+                "MGRS": "30UWE5085724551",
+                "Maidenhead": "IO83vl12we",
+                "Mercator": {
+                    "x": -248674.14,
+                    "y": 7035587.999
+                },
+                "OSM": {
+                    "edit_url": "https://www.openstreetmap.org/edit?way=75361245#map=16/53.46750/-2.23388",
+                    "note_url": "https://www.openstreetmap.org/note/new#map=16/53.46750/-2.23388&layers=N",
+                    "url": "https://www.openstreetmap.org/?mlat=53.46750&mlon=-2.23388#map=16/53.46750/-2.23388"
+                },
+                "UN_M49": {
+                    "regions": {
+                        "EUROPE": "150",
+                        "GB": "826",
+                        "NORTHERN_EUROPE": "154",
+                        "WORLD": "001"
+                    },
+                    "statistical_groupings": [
+                        "MEDC"
+                    ]
+                },
+                "callingcode": 44,
+                "currency": {
+                    "alternate_symbols": [],
+                    "decimal_mark": ".",
+                    "html_entity": "&#x00A3;",
+                    "iso_code": "GBP",
+                    "iso_numeric": "826",
+                    "name": "British Pound",
+                    "smallest_denomination": 1,
+                    "subunit": "Penny",
+                    "subunit_to_unit": 100,
+                    "symbol": "\u00a3",
+                    "symbol_first": 1,
+                    "thousands_separator": ","
+                },
+                "flag": "\ud83c\uddec\ud83c\udde7",
+                "geohash": "gcw2jjmqfc5cx3e5cvyn",
+                "qibla": 118.45,
+                "roadinfo": {
+                    "drive_on": "left",
+                    "road": "Oxford Road",
+                    "speed_in": "mph"
+                },
+                "sun": {
+                    "rise": {
+                        "apparent": 1645600260,
+                        "astronomical": 1645593300,
+                        "civil": 1645598160,
+                        "nautical": 1645595760
+                    },
+                    "set": {
+                        "apparent": 1645637640,
+                        "astronomical": 1645644600,
+                        "civil": 1645639800,
+                        "nautical": 1645642200
+                    }
+                },
+                "timezone": {
+                    "name": "Europe/London",
+                    "now_in_dst": 0,
+                    "offset_sec": 0,
+                    "offset_string": "+0000",
+                    "short_name": "GMT"
+                },
+                "what3words": {
+                    "words": "indoor.kinks.create"
+                },
+                "wikidata": "Q7432411"
+            },
+            "bounds": {
+                "northeast": {
+                    "lat": 53.4679578,
+                    "lng": -2.2330945
+                },
+                "southwest": {
+                    "lat": 53.4670505,
+                    "lng": -2.2346634
+                }
+            },
+            "components": {
+                "ISO_3166-1_alpha-2": "GB",
+                "ISO_3166-1_alpha-3": "GBR",
+                "_category": "building",
+                "_type": "building",
+                "building": "Kilburn Building",
+                "city": "Manchester",
+                "continent": "Europe",
+                "country": "United Kingdom",
+                "country_code": "gb",
+                "county": "Greater Manchester",
+                "postcode": "M13 9PL",
+                "road": "Oxford Road",
+                "state": "England",
+                "state_code": "ENG",
+                "state_district": "North West England",
+                "suburb": "Chorlton-on-Medlock"
+            },
+            "confidence": 10,
+            "formatted": "Kilburn Building, Oxford Road, Manchester, M13 9PL, United Kingdom",
+            "geometry": {
+                "lat": 53.4675034,
+                "lng": -2.2338778
+            }
+        },
+        {
+            "annotations": {
+                "DMS": {
+                    "lat": "53\u00b0 28' 3.02124'' N",
+                    "lng": "2\u00b0 14' 3.61824'' W"
+                },
+                "MGRS": "30UWE5082624551",
+                "Maidenhead": "IO83vl12ve",
+                "Mercator": {
+                    "x": -248725.413,
+                    "y": 7035588.456
+                },
+                "OSM": {
+                    "edit_url": "https://www.openstreetmap.org/edit?node=6845267339#map=16/53.46751/-2.23434",
+                    "note_url": "https://www.openstreetmap.org/note/new#map=16/53.46751/-2.23434&layers=N",
+                    "url": "https://www.openstreetmap.org/?mlat=53.46751&mlon=-2.23434#map=16/53.46751/-2.23434"
+                },
+                "UN_M49": {
+                    "regions": {
+                        "EUROPE": "150",
+                        "GB": "826",
+                        "NORTHERN_EUROPE": "154",
+                        "WORLD": "001"
+                    },
+                    "statistical_groupings": [
+                        "MEDC"
+                    ]
+                },
+                "callingcode": 44,
+                "currency": {
+                    "alternate_symbols": [],
+                    "decimal_mark": ".",
+                    "html_entity": "&#x00A3;",
+                    "iso_code": "GBP",
+                    "iso_numeric": "826",
+                    "name": "British Pound",
+                    "smallest_denomination": 1,
+                    "subunit": "Penny",
+                    "subunit_to_unit": 100,
+                    "symbol": "\u00a3",
+                    "symbol_first": 1,
+                    "thousands_separator": ","
+                },
+                "flag": "\ud83c\uddec\ud83c\udde7",
+                "geohash": "gcw2jjmnb1s81jk1x2m4",
+                "qibla": 118.45,
+                "roadinfo": {
+                    "drive_on": "left",
+                    "road": "Oxford Road",
+                    "speed_in": "mph"
+                },
+                "sun": {
+                    "rise": {
+                        "apparent": 1645600260,
+                        "astronomical": 1645593300,
+                        "civil": 1645598160,
+                        "nautical": 1645595760
+                    },
+                    "set": {
+                        "apparent": 1645637640,
+                        "astronomical": 1645644600,
+                        "civil": 1645639800,
+                        "nautical": 1645642200
+                    }
+                },
+                "timezone": {
+                    "name": "Europe/London",
+                    "now_in_dst": 0,
+                    "offset_sec": 0,
+                    "offset_string": "+0000",
+                    "short_name": "GMT"
+                },
+                "what3words": {
+                    "words": "cracks.spared.loss"
+                }
+            },
+            "bounds": {
+                "northeast": {
+                    "lat": 53.4675559,
+                    "lng": -2.2342884
+                },
+                "southwest": {
+                    "lat": 53.4674559,
+                    "lng": -2.2343884
+                }
+            },
+            "components": {
+                "ISO_3166-1_alpha-2": "GB",
+                "ISO_3166-1_alpha-3": "GBR",
+                "_category": "commerce",
+                "_type": "cafe",
+                "cafe": "Byte Caf\u00e9",
+                "city": "Manchester",
+                "continent": "Europe",
+                "country": "United Kingdom",
+                "country_code": "gb",
+                "county": "Greater Manchester",
+                "postcode": "M13 9PL",
+                "road": "Oxford Road",
+                "state": "England",
+                "state_code": "ENG",
+                "state_district": "North West England",
+                "suburb": "Chorlton-on-Medlock"
+            },
+            "confidence": 9,
+            "formatted": "Byte Caf\u00e9, Oxford Road, Manchester, M13 9PL, United Kingdom",
+            "geometry": {
+                "lat": 53.4675059,
+                "lng": -2.2343384
+            }
+        },
+        {
+            "annotations": {
+                "DMS": {
+                    "lat": "53\u00b0 28' 51.42000'' N",
+                    "lng": "2\u00b0 14' 14.74800'' W"
+                },
+                "MGRS": "30UWE5060526045",
+                "Maidenhead": "IO83vl15mk",
+                "Mercator": {
+                    "x": -249069.568,
+                    "y": 7038096.966
+                },
+                "OSM": {
+                    "note_url": "https://www.openstreetmap.org/note/new#map=16/53.48095/-2.23743&layers=N",
+                    "url": "https://www.openstreetmap.org/?mlat=53.48095&mlon=-2.23743#map=16/53.48095/-2.23743"
+                },
+                "UN_M49": {
+                    "regions": {
+                        "EUROPE": "150",
+                        "GB": "826",
+                        "NORTHERN_EUROPE": "154",
+                        "WORLD": "001"
+                    },
+                    "statistical_groupings": [
+                        "MEDC"
+                    ]
+                },
+                "callingcode": 44,
+                "currency": {
+                    "alternate_symbols": [],
+                    "decimal_mark": ".",
+                    "html_entity": "&#x00A3;",
+                    "iso_code": "GBP",
+                    "iso_numeric": "826",
+                    "name": "British Pound",
+                    "smallest_denomination": 1,
+                    "subunit": "Penny",
+                    "subunit_to_unit": 100,
+                    "symbol": "\u00a3",
+                    "symbol_first": 1,
+                    "thousands_separator": ","
+                },
+                "flag": "\ud83c\uddec\ud83c\udde7",
+                "geohash": "gcw2jpfv05em2ejf5hz0",
+                "qibla": 118.46,
+                "roadinfo": {
+                    "drive_on": "left",
+                    "speed_in": "mph"
+                },
+                "sun": {
+                    "rise": {
+                        "apparent": 1645600260,
+                        "astronomical": 1645593300,
+                        "civil": 1645598160,
+                        "nautical": 1645595760
+                    },
+                    "set": {
+                        "apparent": 1645637640,
+                        "astronomical": 1645644600,
+                        "civil": 1645639800,
+                        "nautical": 1645642200
+                    }
+                },
+                "timezone": {
+                    "name": "Europe/London",
+                    "now_in_dst": 0,
+                    "offset_sec": 0,
+                    "offset_string": "+0000",
+                    "short_name": "GMT"
+                },
+                "what3words": {
+                    "words": "skirt.bumpy.tube"
+                }
+            },
+            "bounds": {
+                "northeast": {
+                    "lat": 53.5711288,
+                    "lng": -2.1065421
+                },
+                "southwest": {
+                    "lat": 53.325798,
+                    "lng": -2.4461839
+                }
+            },
+            "components": {
+                "ISO_3166-1_alpha-2": "GB",
+                "ISO_3166-1_alpha-3": "GBR",
+                "_category": "place",
+                "_type": "city",
+                "continent": "Europe",
+                "country": "United Kingdom",
+                "country_code": "gb",
+                "county": "Manchester",
+                "county_code": "MAN",
+                "state": "England",
+                "state_code": "ENG",
+                "town": "Manchester"
+            },
+            "confidence": 4,
+            "formatted": "Manchester, England, United Kingdom",
+            "geometry": {
+                "lat": 53.48095,
+                "lng": -2.23743
+            }
+        }
+    ],
+    "status": {
+        "code": 200,
+        "message": "OK"
+    },
+    "stay_informed": {
+        "blog": "https://blog.opencagedata.com",
+        "twitter": "https://twitter.com/OpenCage"
+    },
+    "thanks": "For using an OpenCage API",
+    "timestamp": {
+        "created_http": "Wed, 23 Feb 2022 12:45:37 GMT",
+        "created_unix": 1645620337
+    },
+    "total_results": 3
+}
