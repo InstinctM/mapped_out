@@ -1,5 +1,6 @@
-from sqlalchemy import create_engine, Column, Integer, Float,String
+from sqlalchemy import create_engine, Column, Integer, Float,String, null
 from sqlalchemy.orm import declarative_base, sessionmaker
+from opencage.geocoder import OpenCageGeocode, InvalidInputError, RateLimitExceededError, UnknownError
 
 engine = create_engine('sqlite:///./mapped_out.db',echo=True,connect_args={"check_same_thread": False})
 
@@ -40,3 +41,57 @@ for user_entry in session.query(user):
     print(repr(user_entry))
 
 
+<<<<<<< HEAD
+=======
+
+opencageKey="06fee6e0f0fd4b82972c28992c487837"
+geocoder=OpenCageGeocode(opencageKey)
+
+def add_post(p_link, p_description, p_author, p_latitude=None, p_longitude=None, p_location=None):
+    #if given both coordinates and a text location (address) not going to check they are in the same place
+
+    assert ((p_longitude!=None and p_latitude!=None) or p_location!=None), "Incorrect location Data given"
+
+    if (p_longitude==None and p_latitude==None ) and p_location!=None:
+        result=forward_geocode(p_location)
+        if result!=null:
+            entry=post(link=p_link,description=p_description,latitude=result[0],longitude=result[1],location=p_location)
+            session.add(entry)
+            session.flush()
+        else:
+            print("unable to perform forward geocoding.") #TODO more informative error messages
+
+    elif (p_location==None) and (p_longitude!=None and p_latitude!=None):
+        result=reverse_geocode(p_latitude,p_longitude)
+        if result!=null:
+            entry=post(link=p_link,description=p_description,latitude=p_latitude,longitude=p_longitude,location=result)
+            session.add(entry)
+            session.flush()
+        else:
+            print("Unable to perform reverse geocoding.") #TODO ^
+
+def forward_geocode(location):
+    try:
+        results=geocoder.forward_geocode(location,language='en',limit=1, annotations=1)
+        if results and len(results):
+            return (results[0]['geometry']['lat'],results[0]['geometry']['lng'])
+    except RateLimitExceededError as err:
+        print(err)
+        return null
+    except InvalidInputError as err:
+        print(err)
+        return null
+
+
+def reverse_geocode(latitude, longitude):
+    try:
+        results=geocoder.reverse_geocode(latitude,longitude,language='en',limit=1, annotations=1)
+        if results and len(results):
+            return (results[0]['formatted'])
+    except RateLimitExceededError as err:
+        print(err)
+        return null
+    except InvalidInputError as err:
+        print(err)
+        return null
+>>>>>>> ca3944ac50cf41a2180ec81340375307200cc090

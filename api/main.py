@@ -1,17 +1,41 @@
+from black import err
 from fastapi import FastAPI
+import sqlite3
+
 
 app = FastAPI()
 
+
 @app.get("/")
 def root():
-    return
+    pass
 
 @app.get("/radius/")
 def get_videos(xCor : str, yCor: str):
     """ Connects to the database, returns all videos in radius. """
-    return {xCor, yCor}
-
-@app.post("/upload/")
-def post_videos(userHash: str, video: str):
-    """ Connects to the database, stores uploaded video under given Username. """
     pass
+
+@app.get("/upload/{link}/{title}/{author}/{long}/{lat}")
+def post_videos(link: str,title:str,author:str,long:float,lat:float):
+    try:
+        con=sqlite3.connect('../db/mapped_out.db')
+        cur=con.cursor()
+    except sqlite3.Error as error:
+        print(error)
+        return {"Error":"Can't connect to DB!"}
+    try:
+        cur.execute('INSERT INTO posts VALUES ("{}","{}","{}","{}","{}","NONE")'.format(link,title,author,long,lat))
+        con.commit()
+        con.close()
+        return{"Success":"ADDED Video to DB!"}
+    except sqlite3.Error as error:
+        con.commit()
+        con.close()
+        print(error)
+        return {"Error":"Cant insert to DB!"}
+    
+    
+    
+    
+    
+    
