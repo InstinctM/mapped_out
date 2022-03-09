@@ -41,8 +41,6 @@ for user_entry in session.query(user):
     print(repr(user_entry))
 
 
-<<<<<<< HEAD
-=======
 
 opencageKey="06fee6e0f0fd4b82972c28992c487837"
 geocoder=OpenCageGeocode(opencageKey)
@@ -94,4 +92,3 @@ def reverse_geocode(latitude, longitude):
     except InvalidInputError as err:
         print(err)
         return null
->>>>>>> ca3944ac50cf41a2180ec81340375307200cc090
