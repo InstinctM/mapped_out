@@ -10,3 +10,8 @@ def landingPage():
 @app.route("/about", methods = ["GET"])
 def aboutPage():
     return render_template("about.html")
+
+
+@app.route("/login", methods = ["GET"])
+def loginPage():
+    return render_template("login.html")
