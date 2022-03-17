@@ -54,3 +54,10 @@ def post(request : Video_Post, db:Session = Depends(get_db)):
 def get(db:Session = Depends(get_db)):
     all_videos = db.query(db_post).all()
     return all_videos # Returns as JSON 
+
+# Delete Videos From the DB
+@app.delete('/delete/{link}')
+def delete(link: str, db:Session = Depends(get_db)):
+    db.query(db_post).filter(db_post.link == link).delete(synchronize_session=False)
+    db.commit()
+    return None
