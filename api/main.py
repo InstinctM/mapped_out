@@ -48,3 +48,9 @@ def post(request : Video_Post, db:Session = Depends(get_db)):
     db.commit()
     db.refresh(user_video)
     return user_video 
+
+# Get Videos from DB!
+@app.get('/get')
+def get(db:Session = Depends(get_db)):
+    all_videos = db.query(db_post).all()
+    return all_videos # Returns as JSON 
