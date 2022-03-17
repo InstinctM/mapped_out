@@ -10,11 +10,31 @@ The FrontEnd Should be able to :
 
 from typing import final
 from fastapi import FastAPI,Depends
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from db import Session as ses,post as db_post
+
+
+
 app = FastAPI() 
+
+
+"""
+    Allow CORS
+"""
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins = [
+        "http://127.0.0.1:8080",
+    ],
+    allow_credentials = True,
+    allow_methods = ["*"],
+    allow_headers = ["*"],
+)
+
+
 
 @app.get("/")
 def root():
@@ -61,3 +81,8 @@ def delete(link: str, db:Session = Depends(get_db)):
     db.query(db_post).filter(db_post.link == link).delete(synchronize_session=False)
     db.commit()
     return None
+
+@app.get("/user-login")
+def user_login(username, password):
+    print(username, password)
+    return {"token"}
