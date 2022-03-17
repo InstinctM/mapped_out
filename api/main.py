@@ -1,73 +1,50 @@
-from fastapi import FastAPI
-import sqlite3
-from geopy import distance
+"""
+This API provides the platform for the FrontEnd to interact with the DB. 
+The FrontEnd Should be able to : 
+    Request Videos
+    Post New Videos
+    
+    More Features Implementable in due course.
+"""
 
 
-app = FastAPI()
+from typing import final
+from fastapi import FastAPI,Depends
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
 
+from db import Session as ses,post as db_post
+app = FastAPI() 
 
 @app.get("/")
 def root():
     pass
 
-@app.get("/radius/{xCor}/{yCor}")
-def get_videos(xCor : str, yCor: str):
+# Post new user video! 
+class Video_Post (BaseModel):
+    link : str
+    author : str
+    description : str
+    long : float
+    lat : float
+    location : str
 
-    """ Connects to the database, returns all videos in radius. """
-    
-    json = {"Videos":[]}
-
-    center_point = [{'lat': xCor, 'lng': yCor}]
-    center_point_tuple = tuple(center_point[0].values()) # (-7.7940023, 110.3656535)
-    radius = 5 #IN KM
-
+def get_db():
+    db = ses()
     try:
-        con=sqlite3.connect('../db/mapped_out.db')
-        cur=con.cursor()
-    except sqlite3.Error as error:
-        print(error)
-        return {"Error":"Can't connect to DB!"}
+        yield db
+    finally:
+        db.close()
 
-
-    for row in cur.execute('SELECT * FROM posts'):
-        pass
-
-
-        vid = [{'lat': -7.79457, 'lng': 110.36563}]
-        vid_tuple = tuple(vid[0].values()) # (-7.79457, 110.36563)
-
-        dis = distance.distance(center_point_tuple, vid_tuple).km
-        print("Distance: {}".format(dis)) # Distance: 0.0628380925748918
-
-        if dis <= radius:
-            json["Videos"].append(vid)
-            
-
-
-@app.get("/upload/{link}/{title}/{author}/{long}/{lat}")
-
-""" Connects to the database and inserts a record into the table """
-
-def post_videos(link: str,title:str,author:str,long:float,lat:float):
-    try:
-        con=sqlite3.connect('../db/mapped_out.db')
-        cur=con.cursor()
-    except sqlite3.Error as error:
-        print(error)
-        return {"Error":"Can't connect to DB!"}
-    try:
-        cur.execute('INSERT INTO posts VALUES ("{}","{}","{}","{}","{}","NONE")'.format(link,title,author,long,lat))
-        con.commit()
-        con.close()
-        return{"Success":"ADDED Video to DB!"}
-    except sqlite3.Error as error:
-        con.commit()
-        con.close()
-        print(error)
-        return {"Error":"Cant insert to DB!"}
-    
-    
-    
-    
-    
-    
+@app.post('/post')
+def post(request : Video_Post, db:Session = Depends(get_db)):
+    user_video  = db_post(author = request.author,
+                          link = request.link,
+                          description = request.description,
+                          location = "Un-Implemented",
+                          latitude = request.lat,
+                          longitude = request.long)
+    db.add(user_video)
+    db.commit()
+    db.refresh(user_video)
+    return user_video 
