@@ -34,8 +34,8 @@ class LoginAuthentication:
             For both login methods.
         """
         # Get correctToken from database
-        correctToken=db.session.query(db.user).filter(db.user.userid==userId).one().token
-        tokenExpire=db.session.query(db.user).filter(db.user.userid==userId).one().tokenExpire
+        correctToken=db.session.query(db.user).filter_by(userid=userId).one().token
+        tokenExpire=db.session.query(db.user).filter_by(userid=userId).scalar().tokenExpire
         if (correctToken == None) or (tokenExpire == None):
             return None
 
@@ -45,60 +45,50 @@ class LoginAuthentication:
         return token == correctToken
 
     @classmethod
-    def createNewUser(cls, user):
+    def createNewUser(cls, userDict):
         """Takes in user as dictionary.
            Returns True if sucessful.
         """
-        userId = hash(user["username"])
+        userId = hash(userDict["username"])
         # See if userId already exist in database
-        query = True
-        if (query):
+        if(db.exists(db.user,db.user.userid==userId)):
             return False
-
-        cur = cls._getDBCur()
-        if (cur == None):
+        userDict["userid"]=userId
+        if(db.add_user(db.user(**userDict))):
+            return True
+        else:
             return False
-
-        cur.execute(f"""
-            INSERT INTO users (userId, username, password, token, tokenExpire, country, points) 
-            VALUES ({userId}, 'temp_username', '', '', 0, 'a_country', 0);
-        """)
-        
-        return True
 
     @classmethod
-    def login(cls, username, password):
+    def login(cls, userid, password):
         """Takes username and hashed password as parameters.
            Returns a (userId, token) if successful. Returns None otherwise.
         """
         # Get hashed password from database
-        cur = cls._getDBCur()
-        if (cur == None):
-            return None
-        cur.execute(f"SELECT password from users WHERE username = '{username}';")
-        correctPassword = cur.fetchone()
-        cur.execute(f"SELECT userId from users WHERE username = '{username}';")
-        userId = cur.fetchone()
-        if (correctPassword == None) or (userId == None):
-            return None
-        correctPassword = correctPassword[0]
 
-        if (password == correctPassword):
-            token = secrets.token_hex(32)
+        user=db.session.query(db.user).filter_by(userid=userid).scalar()
+        if (user==None):
+            return None
+        if (password == user.token):
+            user.token = secrets.token_hex(32)
             # Update token to database
-            cur.execute(f"UPDATE users SET token = '{token}' WHERE username = '{username}';")
+            user.tokenExpire = int(time.time() + cls.EXPIRE_TIME)
 
-            tokenExpire = int(time.time() + cls.EXPIRE_TIME)
-            cur.execute(f"UPDATE users SET tokenExpire = {tokenExpire} WHERE username = '{username}';")
+            try:
+                db.session.commit()
+                return (user.username, user.token)
 
-            return (userId, token)
+            except Exception as err:
+                print(err)
+                return None
         return None
 
     @classmethod
-    def googleLogin(cls, user, token):
+    def googleLogin(cls, token):
         """Takes user and google token as parameter.
            Returns idinfo if successful. Returns None otherwise.
         """
+        #@benkol003 - what is the 'user' argument for?
         try:
             idinfo = id_token.verify_oauth2_token(token, requests.Request(), cls.GOOGLE_CLIENT_ID)
             userId = idinfo['sub']
@@ -108,23 +98,19 @@ class LoginAuthentication:
 
         # Check if userid exist in db
         # If not, then create new user with the given userid
-        cur = cls._getDBCur()
-        if (cur == None):
-            return None
-        cur.execute(f"SELECT username from users WHERE userId = '{userId}';")
-        existingUser = cur.fetchone()
-        if (existingUser == None):
+        user=db.session.query(db)
+        user=db.session.query(db).filter_by(userid=userId).scalar()
+        tokenExpire = int(time.time() + cls.EXPIRE_TIME)
+        if (user == None):
             # Need to think of a way to get their country if logging in for the first time
             # Create user with no password, indicating user signs in with google
-            cur.execute(f"""
-                INSERT INTO users (userId, username, password, token, tokenExpire, country, points) 
-                VALUES ({userId}, 'google_username', '', '', 0, 'a_country', 0);
-            """)
-
-        # Update token
-        cur.execute(f"UPDATE users SET token = '{token}' WHERE userId = '{userId}';")
-        
-        tokenExpire = int(time.time() + cls.EXPIRE_TIME)
-        cur.execute(f"UPDATE users SET tokenExpire = {tokenExpire} WHERE userId = {userId};")
+            user=db.user(userId,None,token,tokenExpire,None,0)
+        user.token=token
+        user.tokenExpire=tokenExpire
+        try:
+            db.session.commit()
+        except Exception as err:
+            print(err)
+            return None
 
         return idinfo
