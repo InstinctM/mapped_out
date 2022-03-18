@@ -13,7 +13,6 @@ from fastapi import FastAPI,Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-
 from db import Session as ses,post as db_post
 
 
@@ -82,7 +81,24 @@ def delete(link: str, db:Session = Depends(get_db)):
     db.commit()
     return None
 
-@app.get("/user-login")
-def user_login(username, password):
-    print(username, password)
-    return {"token"}
+# User Sign UP
+class User_Details (BaseModel):
+    email : str
+    password : str
+    
+def get_db():
+    db = ses()
+    try:
+        yield db
+    finally:
+        db.close()
+
+@app.post('/signup')
+def post(request : User_Details, db:Session = Depends(get_db)):
+    new_user  = db_post(email = request.email,
+                          password = request.password,
+                          )
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    
