@@ -53,28 +53,37 @@ def add_post(uid,lnk,desc,like_n,lat,long,loc):
         entry=post(author=uid,link=lnk,description=desc,likes=like_n,latitude=lat,longitude=long,location=loc)
         session.add(entry)
         session.commit()
+        return True
     except Exception as err:
         print(err)
         session.rollback()
+        return False
 
 def add_user(uid,uname,tkn,tokenexpr,cty,pnts):
     try:
         entry=user(userid=uid,username=uname,token=tkn,tokenExpire=tokenexpr, country=cty, points=pnts)
         session.add(entry)
         session.commit()
+        return True
     except Exception as err:
         print(err)
         session.rollback()
+        return False
 
 def post_query_radius(latitude, longitude, radius): #assuming radius is in miles for now
     matches=[]
     for post_entry in session.query(post):
-        print(repr(post))
         coord=(post_entry.latitude, post_entry.longitude)
         print(distance.distance((latitude,longitude),coord).miles)
         if(distance.distance((latitude,longitude),coord).miles<radius):
             matches.append(post_entry)
     return matches
+
+def exists(table,condition):
+    #table= user or posts
+    #condition is a boolean statement e.g. user.userid=123456
+    q=session.query(table).filter(condition).exists()
+    return session.query(q).scalar()
 
 def print_db():
     print("-------- Users --------")
