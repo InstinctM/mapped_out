@@ -9,15 +9,4 @@ db.add_post(123456,"https://youtu.be/efgIm9YPZvE","Ali G inda house",22,53.46492
 db.add_post(98765,"https://www.youtube.com/watch?v=2TvRITW4M3M","Bruh central",33,53.48358035907067, -2.241522635215619, "Manchester Arndale")
 
 
-print("-------- Users --------")
-for user in db.session.query(db.user):
-    repr(user)
-print()
-print("----------------")
-
-
-print("-------- Posts --------")
-for post in db.session.query(db.post):
-    repr(post)
-print()
-print("----------------")
+db.print_db()
