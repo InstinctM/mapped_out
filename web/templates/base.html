@@ -14,18 +14,29 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <!-- Shared Functions and Constants -->
+    <script src="../static/js/share.js"></script>
 </head>
 
 <body>
     <!-------------------NAVBAR------------------------>
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <nav id="navbar" class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="/">
                 <div id="navbar-brand-div">
                     <img src="../static/img/logo.png" height="40" />
                 </div>
             </a>
+            
 
+            <!----------Search Box----------->
+            <div class="mx-3">
+                <div class="input-group">
+                    <input id="search" class="form-control" type="search" placeholder="Search"/>
+                    <button class="btn btn-secondary"><i class="bi bi-search"></i></button>
+                </div>
+            </div>
 
             <!----------Collapse button----------->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -34,8 +45,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <!---------**Nav Items**---------->
                     <li class="nav-item">
@@ -46,14 +56,18 @@
                     </li>
                     <!---------^^Nav Items^^---------->
                 </ul>
+                <div class="navbar-nav">
+                    <button class="btn btn-primary mx-3 my-2 btn-block"
+                        onclick="location.replace('/login');"
+                    >Login</button>
+                </div>
             </div>
 
-            <button class="btn btn-primary my-2 my-sm-0" onclick="location.replace('/login');">Login</button>
         </div>
     </nav>
 
     <!-------------body------------->
-    <div>
+    <div id="body-content">
         <!--Page Content-->
         {%block content%}{%endblock%}
     </div>

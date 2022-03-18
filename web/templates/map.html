@@ -11,6 +11,8 @@
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
     integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
     crossorigin=""></script>
+
+
 <style>
     #map {
         position: absolute;
@@ -18,35 +20,10 @@
         height: 100%;
     }
 </style>
+
+
 <script src="https://cdn.jsdelivr.net/gh/Falke-Design/L.Donut@latest/src/L.Donut.js"></script>
-
-
 <div id="map"></div>
-
-<script>
-    var map = L.map('map').setView([0, 0], 1);
-    const marker = L.marker([0, 0]).addTo(map).bindPopup("<h1> Message </h1> <p> Message </p>").openPopup();
-    const cicrle = L.circle([0, 0], {radius: 50000, color: "red", fillColor: "green", fillOpacity: 0.2}).addTo(map); // radius is in meters
-
-    L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=aEvyw1adgGE2cO8JBfZJ', {
-        attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
-    }).addTo(map);
-
-    map.on('click', function (e) {
-        lat = e.latlng.lat;
-        lon = e.latlng.lng;
-
-        marker.setLatLng([lat, lon]);
-        cicrle.setLatLng([lat, lon]);
-
-        document.getElementById('latitude').value = marker.getLatLng().lat;
-        document.getElementById('longitude').value = marker.getLatLng().lng;
-
-    });
-
-</script>
-
-
-
+<script src="../static/js/map.js"></script>
 
 {%endblock%}
