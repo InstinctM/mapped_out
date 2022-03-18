@@ -7,15 +7,14 @@ The FrontEnd Should be able to :
     More Features Implementable in due course.
 """
 
-
-from typing import final
 from fastapi import FastAPI,Depends
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-
 from db import Session as ses,post as db_post
+# APPLICATION
 app = FastAPI() 
 
+# Root
 @app.get("/")
 def root():
     pass
@@ -53,7 +52,7 @@ def post(request : Video_Post, db:Session = Depends(get_db)):
 @app.get('/get')
 def get(db:Session = Depends(get_db)):
     all_videos = db.query(db_post).all()
-    return all_videos # Returns as JSON 
+    return all_videos #Returns as JSON
 
 # Delete Videos From the DB
 @app.delete('/delete/{link}')

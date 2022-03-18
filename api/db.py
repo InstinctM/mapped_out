@@ -2,7 +2,7 @@
 
 from sqlalchemy import create_engine, Column, Integer, Float,String, null
 from sqlalchemy.orm import declarative_base, sessionmaker
-from geopy import distance
+#from geopy import distance
 
 engine = create_engine('sqlite:///./mapped_out.db',echo=True,connect_args={"check_same_thread": False})
 
@@ -20,10 +20,10 @@ class post(Base):
     author=Column(Integer)
     link=Column(String,unique=True)
     description=Column(String)
-    likes=Column(Integer)
+    #likes=Column(Integer)
     latitude=Column(Float)
     longitude=Column(Float)
-    location=Column(String)
+    location=Column(String) 
 
     def __repr__(self):
         return '<post ( rowid=%s , link=%s , description=%s , author=%s , longitude=%s , latitude=%s , location=%s )> ' % (self.rowid,self.link,self.description,self.author,self.longitude,self.latitude,self.location)
@@ -44,7 +44,7 @@ class user(Base):
     def __repr__(self):
         return '<user ( rowid=%s , name=%s , accessToken=%s ) >' % ( self.rowid, self.name, self.accessToken)
 
-
+"""
 def add_post(uid,lnk,desc,like_n,lat,long,loc):
     entry=post(author=uid,link=lnk,description=desc,likes=like_n,latitude=lat,longitude=long,location=loc)
     session.add(entry)
@@ -62,3 +62,5 @@ def post_query_radius(latitude, longitude, radius): #assuming radius is in miles
         if(distance.distance((latitude,longitude),coord).miles<radius):
             matches.append(post_entry)
     return matches
+    
+    """
