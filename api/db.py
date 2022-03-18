@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, Column, Integer, Float,String, null, MetaD
 from sqlalchemy.orm import declarative_base, sessionmaker
 from geopy import distance
 
-engine = create_engine('sqlite:///./mapped_out.db',echo=True,connect_args={"check_same_thread": False})
+engine = create_engine('sqlite:///./mapped_out.db',connect_args={"check_same_thread": False})
 
 metadata=MetaData()
 
@@ -29,6 +29,7 @@ class post(Base):
 #records in user table
 class user(Base):
     __tablename__="users"
+    
 
     rowid=Column(Integer, primary_key=True)
     userid=Column(Integer, unique=True)
@@ -81,7 +82,7 @@ def post_query_radius(latitude, longitude, radius): #assuming radius is in miles
 
 def exists(table,condition):
     #table= user or posts
-    #condition is a boolean statement e.g. user.userid=123456
+    #condition is a boolean statement e.g. user.userid==123456
     q=session.query(table).filter(condition).exists()
     return session.query(q).scalar()
 
