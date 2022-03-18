@@ -17,18 +17,6 @@ class LoginAuthentication:
         pass
 
     @classmethod
-    def _getDBCur(cls):
-        """ Returns the sqlite3 cursor object """
-        try:
-            dbPath = os.path.join(__file__, "../db/mapped_out.db")
-            con = sqlite3.connect(dbPath)
-            cur = con.cursor()
-        except:
-            print("Database Error")
-            return None
-        return cur
-
-    @classmethod
     def authenticate(cls, userId, token):
         """ Returns True if user is authenticated.
             For both login methods.
