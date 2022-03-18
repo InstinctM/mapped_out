@@ -3,7 +3,7 @@ import time
 from google.oauth2 import id_token
 import requests
 import secrets
-import sqlite3
+import db
 
 
 class LoginAuthentication:
@@ -34,22 +34,14 @@ class LoginAuthentication:
             For both login methods.
         """
         # Get correctToken from database
-        cur = cls._getDBCur()
-        if (cur == None):
-            return False
-        cur.execute(f"SELECT token from users WHERE userId = {userId};")
-        correctToken = cur.fetchone()
-        cur.execute(f"SELECT tokenExpire from users WHERE userId = {userId};")
-        tokenExpire = cur.fetchone()
+        correctToken=db.session.query(db.user).filter(db.user.userid==userId).one().token
+        tokenExpire=db.session.query(db.user).filter(db.user.userid==userId).one().tokenExpire
         if (correctToken == None) or (tokenExpire == None):
             return None
-        
-        correctToken = correctToken[0]
-        tokenExpire = tokenExpire[0]
 
         if (time.time() > tokenExpire):
             return None
-
+            
         return token == correctToken
 
     @classmethod
