@@ -14,7 +14,7 @@ async function onLogin() {
 
     console.log(`username: ${username} | password: ${password} | hashed: ${hashed}`)
 
-    $.get("http://127.0.0.1:8000/user-login", {
+    httpGet(API_URL + "/user-login", {
         "username": username,
         "password": hashed,
     }, (response) => {
