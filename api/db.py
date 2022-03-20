@@ -12,15 +12,24 @@ Base=declarative_base()
 #use session.query (sqlalchemy) with record objects
 #represents records in post table
 class post(Base):
+    def __init__(self,author,link,desc, likes, latitude, longitude, location):
+        self.author=author
+        self.link=link
+        self.description=desc
+        self.likes=likes
+        self.latitude=latitude
+        self.longitude=longitude
+        self.location=location
+
     __tablename__="posts"
 
     rowid=Column(Integer, primary_key=True) #this exists by default in sql tables
-    author=Column(Integer)
-    link=Column(String,unique=True)
+    author=Column(Integer, nullable=False)
+    link=Column(String,unique=True, nullable=False)
     description=Column(String)
     likes=Column(Integer)
-    latitude=Column(Float)
-    longitude=Column(Float)
+    latitude=Column(Float, nullable=False)
+    longitude=Column(Float, nullable=False)
     location=Column(String)
 
     def __repr__(self):
@@ -28,14 +37,23 @@ class post(Base):
 
 #records in user table
 class user(Base):
+
+    def __init__(self,userid,username,token,tokenExpire,country,points):
+        self.userid=userid
+        self.username=username
+        self.token=token
+        self.tokenExpire=tokenExpire
+        self.country=country
+        self.points=points
+        
     __tablename__="users"
     
 
     rowid=Column(Integer, primary_key=True)
-    userid=Column(Integer, unique=True)
+    userid=Column(Integer, unique=True, nullable=False)
     username=Column(String)
-    token=Column(String) 
-    tokenExpire=Column(Integer)
+    token=Column(String, nullable=False) 
+    tokenExpire=Column(Integer, nullable=False)
     country=Column(String)
     points=Column(Integer)
 
@@ -49,9 +67,9 @@ Session=sessionmaker()
 Session.configure(bind=engine)
 session=Session()
 
-def add_post(uid,lnk,desc,like_n,lat,long,loc):
+def add_post(entry):
+    #entry is a post object
     try:
-        entry=post(author=uid,link=lnk,description=desc,likes=like_n,latitude=lat,longitude=long,location=loc)
         session.add(entry)
         session.commit()
         return True
@@ -60,9 +78,9 @@ def add_post(uid,lnk,desc,like_n,lat,long,loc):
         session.rollback()
         return False
 
-def add_user(uid,uname,tkn,tokenexpr,cty,pnts):
+def add_user(entry):
+    #entry is a user object
     try:
-        entry=user(userid=uid,username=uname,token=tkn,tokenExpire=tokenexpr, country=cty, points=pnts)
         session.add(entry)
         session.commit()
         return True
