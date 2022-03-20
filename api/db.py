@@ -23,14 +23,14 @@ class post(Base):
 
     __tablename__="posts"
 
-    rowid=Column(Integer, primary_key=True) #this exists by default in sql tables
-    author=Column(Integer, nullable=False)
-    link=Column(String,unique=True, nullable=False)
-    description=Column(String)
-    likes=Column(Integer)
-    latitude=Column(Float, nullable=False)
-    longitude=Column(Float, nullable=False)
-    location=Column(String)
+    rowid = Column(Integer, primary_key=True) #this exists by default in sql tables
+    author = Column(Integer, nullable=False)
+    link = Column(String,unique=True, nullable=False)
+    description = Column(String)
+    likes = Column(Integer)
+    latitude = Column(Float, nullable=False)
+    longitude = Column(Float, nullable=False)
+    location = Column(String)
 
     def __repr__(self):
         return '<post ( rowid=%s , author=%s, link=%s, description=%s, likes=%s, latitude=%s, longitude=%s, location=%s )> ' % (self.rowid, self.author, self.link, self.description, self.likes, self.latitude, self.longitude, self.location)
@@ -38,28 +38,30 @@ class post(Base):
 #records in user table
 class user(Base):
 
-    def __init__(self,userid,username,token,tokenExpire,country,points):
-        self.userid=userid
-        self.username=username
-        self.token=token
-        self.tokenExpire=tokenExpire
-        self.country=country
-        self.points=points
+    def __init__(self,userid,username,password,token,tokenExpire,country,points):
+        self.userid = userid
+        self.username = username
+        self.password = password
+        self.token = token
+        self.tokenExpire = tokenExpire
+        self.country = country
+        self.points = points
         
-    __tablename__="users"
+    __tablename__ = "users"
     
 
-    rowid=Column(Integer, primary_key=True)
-    userid=Column(Integer, unique=True, nullable=False)
-    username=Column(String)
-    token=Column(String, nullable=False) 
-    tokenExpire=Column(Integer, nullable=False)
-    country=Column(String)
-    points=Column(Integer)
+    rowid = Column(Integer, primary_key=True)
+    userid = Column(Integer, unique=True, nullable=False)
+    username = Column(String)
+    password = Column(String, nullable=False) 
+    token = Column(String, nullable=False) 
+    tokenExpire = Column(Integer, nullable=False)
+    country = Column(String)
+    points = Column(Integer)
 
 
     def __repr__(self):
-        return '<user ( rowid=%s , userid=%s , username=%s, token=%s, tokenExpire=%s, country=%s, points=%s ) >' % ( self.rowid, self.userid, self.username, self.token, self.tokenExpire, self.country, self.points)
+        return '<user ( rowid=%s , userid=%s , username=%s, password=%s, token=%s, tokenExpire=%s, country=%s, points=%s ) >' % ( self.rowid, self.userid, self.username, self.password, self.token, self.tokenExpire, self.country, self.points)
 
 Base.metadata.create_all(engine)
 

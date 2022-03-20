@@ -41,30 +41,36 @@ class LoginAuthentication:
         # See if userId already exist in database
         if(db.exists(db.user,db.user.userid==userId)):
             return False
+
+        # Add default values
         userDict["userid"]=userId
+        userDict["token"] = ""
+        userDict["tokenExpire"] = 0
+        userDict["points"] = 0
+
         if(db.add_user(db.user(**userDict))):
             return True
         else:
             return False
 
     @classmethod
-    def login(cls, userid, password):
+    def login(cls, username, password):
         """Takes username and hashed password as parameters.
            Returns a (userId, token) if successful. Returns None otherwise.
         """
         # Get hashed password from database
 
-        user=db.session.query(db.user).filter_by(userid=userid).scalar()
-        if (user==None):
+        user=db.session.query(db.user).filter_by(username=username).scalar()
+        if (user == None):
             return None
-        if (password == user.token):
+        if (password == user.password):
             user.token = secrets.token_hex(32)
             # Update token to database
             user.tokenExpire = int(time.time() + cls.EXPIRE_TIME)
 
             try:
                 db.session.commit()
-                return (user.username, user.token)
+                return (user.userid, user.token)
 
             except Exception as err:
                 print(err)

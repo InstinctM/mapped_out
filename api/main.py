@@ -13,8 +13,8 @@ from fastapi import FastAPI,Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from db import Session as ses,post as db_post
-
+from db import Session as ses, post as db_post, user as db_user
+from login import LoginAuthentication
 
 
 app = FastAPI() 
@@ -57,12 +57,15 @@ def get_db():
 
 @app.post('/post')
 def post(request : Video_Post, db:Session = Depends(get_db)):
-    user_video  = db_post(author = request.author,
-                          link = request.link,
-                          description = request.description,
-                          location = "Un-Implemented",
-                          latitude = request.lat,
-                          longitude = request.long)
+    user_video  = db_post(
+        author = request.author,
+        link = request.link,
+        desc = request.description,
+        location = "Un-Implemented",
+        latitude = request.lat,
+        longitude = request.long,
+        likes = 0,
+    )
     db.add(user_video)
     db.commit()
     db.refresh(user_video)
@@ -77,28 +80,36 @@ def get(db:Session = Depends(get_db)):
 # Delete Videos From the DB
 @app.delete('/delete/{link}')
 def delete(link: str, db:Session = Depends(get_db)):
-    db.query(db_post).filter(db_post.link == link).delete(synchronize_session=False)
+    db.query(db_post).filter(db_post.link == link).delete(
+        synchronize_session=False
+    )
     db.commit()
     return None
 
 # User Sign UP
-class User_Details (BaseModel):
-    email : str
+class UserSignUp (BaseModel):
+    username : str
     password : str
+    country : str
     
-def get_db():
-    db = ses()
-    try:
-        yield db
-    finally:
-        db.close()
-
 @app.post('/signup')
-def post(request : User_Details, db:Session = Depends(get_db)):
-    new_user  = db_post(email = request.email,
-                          password = request.password,
-                          )
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
+def signup(user: UserSignUp):
+    result = LoginAuthentication.createNewUser(user.dict())
+    if result:
+        return {"result": "success"}
+    return None
     
+class UserLogin(BaseModel):
+    username : str
+    password : str
+
+@app.post('/user-login')
+def user_login(user : UserLogin):
+    result = LoginAuthentication.login(user.username, user.password)
+    if result == None:
+        return None
+    userid, token = result
+    return {
+        "userid": userid,
+        "token": token,
+    }
