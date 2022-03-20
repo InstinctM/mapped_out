@@ -12,36 +12,56 @@ Base=declarative_base()
 #use session.query (sqlalchemy) with record objects
 #represents records in post table
 class post(Base):
+    def __init__(self,author,link,desc, likes, latitude, longitude, location):
+        self.author=author
+        self.link=link
+        self.description=desc
+        self.likes=likes
+        self.latitude=latitude
+        self.longitude=longitude
+        self.location=location
+
     __tablename__="posts"
 
-    rowid=Column(Integer, primary_key=True) #this exists by default in sql tables
-    author=Column(Integer)
-    link=Column(String,unique=True)
-    description=Column(String)
-    likes=Column(Integer)
-    latitude=Column(Float)
-    longitude=Column(Float)
-    location=Column(String)
+    rowid = Column(Integer, primary_key=True) #this exists by default in sql tables
+    author = Column(Integer, nullable=False)
+    link = Column(String,unique=True, nullable=False)
+    description = Column(String)
+    likes = Column(Integer)
+    latitude = Column(Float, nullable=False)
+    longitude = Column(Float, nullable=False)
+    location = Column(String)
 
     def __repr__(self):
         return '<post ( rowid=%s , author=%s, link=%s, description=%s, likes=%s, latitude=%s, longitude=%s, location=%s )> ' % (self.rowid, self.author, self.link, self.description, self.likes, self.latitude, self.longitude, self.location)
 
 #records in user table
 class user(Base):
-    __tablename__="users"
+
+    def __init__(self,userid,username,password,token,tokenExpire,country,points):
+        self.userid = userid
+        self.username = username
+        self.password = password
+        self.token = token
+        self.tokenExpire = tokenExpire
+        self.country = country
+        self.points = points
+        
+    __tablename__ = "users"
     
 
-    rowid=Column(Integer, primary_key=True)
-    userid=Column(Integer, unique=True)
-    username=Column(String)
-    token=Column(String) 
-    tokenExpire=Column(Integer)
-    country=Column(String)
-    points=Column(Integer)
+    rowid = Column(Integer, primary_key=True)
+    userid = Column(Integer, unique=True, nullable=False)
+    username = Column(String)
+    password = Column(String, nullable=False) 
+    token = Column(String, nullable=False) 
+    tokenExpire = Column(Integer, nullable=False)
+    country = Column(String)
+    points = Column(Integer)
 
 
     def __repr__(self):
-        return '<user ( rowid=%s , userid=%s , username=%s, token=%s, tokenExpire=%s, country=%s, points=%s ) >' % ( self.rowid, self.userid, self.username, self.token, self.tokenExpire, self.country, self.points)
+        return '<user ( rowid=%s , userid=%s , username=%s, password=%s, token=%s, tokenExpire=%s, country=%s, points=%s ) >' % ( self.rowid, self.userid, self.username, self.password, self.token, self.tokenExpire, self.country, self.points)
 
 Base.metadata.create_all(engine)
 
@@ -49,9 +69,9 @@ Session=sessionmaker()
 Session.configure(bind=engine)
 session=Session()
 
-def add_post(uid,lnk,desc,like_n,lat,long,loc):
+def add_post(entry):
+    #entry is a post object
     try:
-        entry=post(author=uid,link=lnk,description=desc,likes=like_n,latitude=lat,longitude=long,location=loc)
         session.add(entry)
         session.commit()
         return True
@@ -60,9 +80,9 @@ def add_post(uid,lnk,desc,like_n,lat,long,loc):
         session.rollback()
         return False
 
-def add_user(uid,uname,tkn,tokenexpr,cty,pnts):
+def add_user(entry):
+    #entry is a user object
     try:
-        entry=user(userid=uid,username=uname,token=tkn,tokenExpire=tokenexpr, country=cty, points=pnts)
         session.add(entry)
         session.commit()
         return True
