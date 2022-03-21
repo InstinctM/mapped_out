@@ -25,7 +25,7 @@
 
      <div class="row justify-content-center">
         <p class="col-4 text-center">Don't have an account? </p>
-        <a class="col-4 link-primary text-center" href="#">Create A New Account</a>
+        <a class="col-4 link-primary text-center" href="/signup">Create A New Account</a>
      </div>
 
      <div class="separator my-3">
@@ -33,7 +33,27 @@
      </div>
 
 
-     <button class="btn btn-secondary btn-block" style="width:100%" onclick="onGoogleLogin()">Login with Google</button>
+     <div class="mx-auto" style="width: 288px">
+        <div id="google-login-btn" class="mx-auto"></div>
+        <div id="g_id_onload"
+             data-client_id="1047753082993-1iftbpo90ar6die9le8hffheu3pscik0.apps.googleusercontent.com"
+             data-context="signin"
+             data-ux_mode="popup"
+             data-callback="onGoogleLogin"
+             data-auto_prompt="false">
+        </div>
+
+        <div class="g_id_signin"
+             data-type="standard"
+             data-shape="rectangular"
+             data-theme="filled_blue"
+             data-text="signin_with"
+             data-size="large"
+             data-logo_alignment="left"
+             data-width="288">
+        </div>
+     </div>
+     <!--<button class="btn btn-secondary btn-block" style="width:100%" onclick="onGoogleLogin()">Login with Google</button>-->
 
    </div> 
 </div>

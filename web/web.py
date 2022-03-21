@@ -14,3 +14,7 @@ def aboutPage():
 @app.route("/login", methods = ["GET"])
 def loginPage():
     return render_template("login.html")
+
+@app.route("/signup", methods = ["GET"])
+def signupPage():
+    return render_template("signup.html")
