@@ -1,0 +1,26 @@
+{%extends "base.html" %}
+
+<!-- Change the title of this page HERE -->
+{%block title%}User{%endblock%}
+
+
+{%block content%}
+
+<div class="container m-auto">
+    <div class="col-6 m-auto justify-content-center">
+        <h1 id="welcome-txt" class="my-4">Welcome {username}</h1>
+
+        <button class="btn btn-secondary btn-block mb-2" style="width:100%" onclick="onLogout()">Logout</button>
+    </div>
+</div>
+
+<script src="../static/js/login.js"></script>
+<script>
+    updateUserPage();
+    function updateUserPage() {
+        let username = localStorage.getItem("username");
+        document.getElementById("welcome-txt").innerText = `Welcome ${username}!`;
+    }
+</script>
+
+{%endblock%}

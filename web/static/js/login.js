@@ -73,24 +73,10 @@ async function onLogin() {
         localStorage.setItem("token", response["token"]);
         localStorage.setItem("tokenExpire", response["tokenExpire"]);
 
+        location.reload();
     });
 }
 
-
-window.onload = (e) => {
-    //google.accounts.id.initialize({
-    //    client_id: GOOGLE_CLIENT_ID,
-    //    callback: onGoogleLogin,
-    //});
-    //google.accounts.id.renderButton(
-    //    document.getElementById("google-login-btn"),
-    //    {
-    //        theme: "outline",
-    //        size: "large",
-    //    }
-    //);
-    //google.accounts.id.prompt();
-}
 
 function onGoogleLogin(response) {
     try {
@@ -98,12 +84,27 @@ function onGoogleLogin(response) {
             token: response["credential"],
         }, (response) => {
             console.log("Google Login: " + JSON.stringify(response));
+            if (response == null) {
+                alert("Failed to login with Google.");
+                return;
+            }
+
             localStorage.setItem("userid", response["userid"]);
             localStorage.setItem("username", response["username"]);
             localStorage.setItem("token", response["token"]);
             localStorage.setItem("tokenExpire", response["tokenExpire"]);
+
+            location.reload();
         });
     } catch {
         console.log("failed to decode jwt token");
+        alert("Something went wrong...");
     }
+}
+
+
+
+function onLogout() {
+    logoutAll();
+    location.replace("/login");
 }

@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, request, render_template
 
 app = Flask(__name__, static_folder='static')
 
@@ -13,6 +13,9 @@ def aboutPage():
 
 @app.route("/login", methods = ["GET"])
 def loginPage():
+    loggedin = request.args.get('loggedin', default = "", type = str)
+    if (loggedin == "true"):
+        return render_template("user.html")
     return render_template("login.html")
 
 @app.route("/signup", methods = ["GET"])
