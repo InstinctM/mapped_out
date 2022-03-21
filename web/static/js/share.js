@@ -1,4 +1,5 @@
-const API_URL = "http://127.0.0.1:8000"
+const API_URL = "http://localhost:8000";
+const GOOGLE_CLIENT_ID = "1047753082993-1iftbpo90ar6die9le8hffheu3pscik0.apps.googleusercontent.com";
 
 function httpGet(url, data, callback) {
     $.ajax({
