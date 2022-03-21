@@ -1,7 +1,7 @@
 import os
 import time
 from google.oauth2 import id_token
-import requests
+from google.auth.transport import requests
 import secrets
 import db
 
@@ -22,15 +22,17 @@ class LoginAuthentication:
             For both login methods.
         """
         # Get correctToken from database
-        correctToken=db.session.query(db.user).filter_by(userid=userId).one().token
-        tokenExpire=db.session.query(db.user).filter_by(userid=userId).scalar().tokenExpire
+        user = db.session.query(db.user).filter_by(userid=userId).scalar()
+        correctToken = user.token
+        tokenExpire = user.tokenExpire
         if (correctToken == None) or (tokenExpire == None):
             return None
-
-        if (time.time() > tokenExpire):
+        elif (time.time() > tokenExpire):
+            return None
+        elif (token != correctToken):
             return None
             
-        return token == correctToken
+        return user
 
     @classmethod
     def createNewUser(cls, userDict):
@@ -70,41 +72,48 @@ class LoginAuthentication:
 
             try:
                 db.session.commit()
-                return (user.userid, user.token)
-
+                return {
+                    "userid": user.userid,
+                    "token": user.token,
+                    "tokenExpire": user.tokenExpire,
+                }
             except Exception as err:
                 print(err)
                 return None
         return None
 
     @classmethod
-    def googleLogin(cls, token):
-        """Takes user and google token as parameter.
+    def googleLogin(cls, credential):
+        """Takes google credential JWT as parameter.
            Returns idinfo if successful. Returns None otherwise.
         """
-        #@benkol003 - what is the 'user' argument for?
         try:
-            idinfo = id_token.verify_oauth2_token(token, requests.Request(), cls.GOOGLE_CLIENT_ID)
+            idinfo = id_token.verify_oauth2_token(credential, requests.Request(), cls.GOOGLE_CLIENT_ID)
             userId = idinfo['sub']
-            print(userId) # debug
+            username = idinfo['name']
+            print(idinfo) # debug
         except ValueError:
             return None
 
         # Check if userid exist in db
         # If not, then create new user with the given userid
-        user=db.session.query(db)
-        user=db.session.query(db).filter_by(userid=userId).scalar()
-        tokenExpire = int(time.time() + cls.EXPIRE_TIME)
+        user = db.session.query(db.user).filter_by(userid=userId).scalar()
         if (user == None):
             # Need to think of a way to get their country if logging in for the first time
             # Create user with no password, indicating user signs in with google
-            user=db.user(userId,None,token,tokenExpire,None,0)
-        user.token=token
-        user.tokenExpire=tokenExpire
+            user = db.user(userId, username, None, "", 0, "Country", 0)
+        user.token = secrets.token_hex(32)
+        user.tokenExpire = int(time.time() + cls.EXPIRE_TIME)
+
         try:
             db.session.commit()
         except Exception as err:
             print(err)
             return None
 
-        return idinfo
+        return {
+            "userid": userId,
+            "username": username,
+            "token": user.token,
+            "tokenExpire": user.tokenExpire,
+        }

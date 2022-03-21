@@ -13,7 +13,8 @@ from fastapi import FastAPI,Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from db import Session as ses, post as db_post, user as db_user
+from db import Session as ses, post as db_post, user as db_user, add_post
+from db import post_query_radius
 from login import LoginAuthentication
 
 
@@ -26,27 +27,12 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins = [
-        "http://127.0.0.1:8080",
+        "http://localhost:8080",
     ],
     allow_credentials = True,
     allow_methods = ["*"],
     allow_headers = ["*"],
 )
-
-
-
-@app.get("/")
-def root():
-    pass
-
-# Post new user video! 
-class Video_Post (BaseModel):
-    link : str
-    author : str
-    description : str
-    long : float
-    lat : float
-    location : str
 
 def get_db():
     db = ses()
@@ -55,27 +41,50 @@ def get_db():
     finally:
         db.close()
 
+
+### Endpoints
+@app.get("/")
+def root():
+    pass
+
+# Post new user video! 
+class Video_Post (BaseModel):
+    userid : int
+    token : str
+    link : str
+    description : str
+    lon : float
+    lat : float
+    location : str
+
 @app.post('/post')
-def post(request : Video_Post, db:Session = Depends(get_db)):
+def post(request : Video_Post):
+    user = LoginAuthentication.authenticate(request.userid, request.token)
+    if user == None: # authenticate user
+        return None
     user_video  = db_post(
-        author = request.author,
+        author = request.userid,
         link = request.link,
         desc = request.description,
-        location = "Un-Implemented",
+        location = "Un-Implemented", # Call geo-coding?
         latitude = request.lat,
-        longitude = request.long,
+        longitude = request.lon,
         likes = 0,
     )
-    db.add(user_video)
-    db.commit()
-    db.refresh(user_video)
-    return user_video 
+    if add_post(user_video): # add_post returns true if success
+        return {"result": "success"}
+    return None
 
 # Get Videos from DB!
-@app.get('/get')
-def get(db:Session = Depends(get_db)):
-    all_videos = db.query(db_post).all()
-    return all_videos # Returns as JSON 
+class GetPosts(BaseModel):
+    lat : float
+    lon : float
+    radius : float
+
+@app.get('/get-posts')
+def get(lat : float, lon : float, radius : float):
+    posts = post_query_radius(lat, lon, radius)
+    return posts
 
 # Delete Videos From the DB
 @app.delete('/delete/{link}')
@@ -106,10 +115,13 @@ class UserLogin(BaseModel):
 @app.post('/user-login')
 def user_login(user : UserLogin):
     result = LoginAuthentication.login(user.username, user.password)
-    if result == None:
-        return None
-    userid, token = result
-    return {
-        "userid": userid,
-        "token": token,
-    }
+    return result
+
+
+class GUserLogin(BaseModel):
+    token : str
+
+@app.post('/google-login')
+def google_login(guser : GUserLogin):
+    result = LoginAuthentication.googleLogin(guser.token)
+    return result
