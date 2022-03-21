@@ -26,7 +26,7 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins = [
-        "http://127.0.0.1:8080",
+        "http://localhost:8080",
     ],
     allow_credentials = True,
     allow_methods = ["*"],
@@ -106,10 +106,13 @@ class UserLogin(BaseModel):
 @app.post('/user-login')
 def user_login(user : UserLogin):
     result = LoginAuthentication.login(user.username, user.password)
-    if result == None:
-        return None
-    userid, token = result
-    return {
-        "userid": userid,
-        "token": token,
-    }
+    return result
+
+
+class GUserLogin(BaseModel):
+    token : str
+
+@app.post('/google-login')
+def google_login(guser : GUserLogin):
+    result = LoginAuthentication.googleLogin(guser.token)
+    return result
