@@ -22,15 +22,17 @@ class LoginAuthentication:
             For both login methods.
         """
         # Get correctToken from database
-        correctToken=db.session.query(db.user).filter_by(userid=userId).one().token
-        tokenExpire=db.session.query(db.user).filter_by(userid=userId).scalar().tokenExpire
+        user = db.session.query(db.user).filter_by(userid=userId).scalar()
+        correctToken = user.token
+        tokenExpire = user.tokenExpire
         if (correctToken == None) or (tokenExpire == None):
             return None
-
-        if (time.time() > tokenExpire):
+        elif (time.time() > tokenExpire):
+            return None
+        elif (token != correctToken):
             return None
             
-        return token == correctToken
+        return user
 
     @classmethod
     def createNewUser(cls, userDict):

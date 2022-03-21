@@ -97,7 +97,18 @@ def post_query_radius(latitude, longitude, radius): #assuming radius is in miles
         coord=(post_entry.latitude, post_entry.longitude)
         print(distance.distance((latitude,longitude),coord).miles)
         if(distance.distance((latitude,longitude),coord).miles<radius):
-            matches.append(post_entry)
+            author = session.query(user).filter(user.userid == post_entry.author).scalar()
+            if author == None: # Should not happen
+                return None
+            matches.append({
+                "username": author.username,
+                "link": post_entry.link,
+                "description": post_entry.description,
+                "latitude": post_entry.latitude,
+                "longitude": post_entry.longitude,
+                "likes": post_entry.likes,
+                "location": post_entry.location,
+            })
     return matches
 
 def exists(table,condition):
