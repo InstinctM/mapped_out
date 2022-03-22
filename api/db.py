@@ -109,8 +109,11 @@ def return_video(id,link):
         session.rollback()
         return False
 
-
-        
+def updateLikes(link,upOrDown):
+    video = session.query(post).filter(post.link == link).first()
+    video.likes +=upOrDown
+    session.commit()
+    
 def post_query_radius(latitude, longitude, radius): #assuming radius is in miles for now
     matches=[]
     for post_entry in session.query(post):

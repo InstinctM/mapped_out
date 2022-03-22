@@ -13,7 +13,7 @@ from fastapi import FastAPI,Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from db import Session as ses, post as db_post, user as db_user, add_post,delete_video,return_video
+from db import Session as ses, post as db_post, user as db_user, add_post,delete_video,return_video,updateLikes
 from db import post_query_radius
 from login import LoginAuthentication
 
@@ -97,12 +97,11 @@ def delete(request:Video_Delete):
     user = LoginAuthentication.authenticate(request.userid, request.token)
     if user == None: 
         return None
-    
     video = return_video(user.userid,request.link)
     if not video:
         return None
     delete_video(video.link)
-    return {"Deleted Video":""}
+    return True
 
 
 # User Sign UP
@@ -137,6 +136,13 @@ def google_login(guser : GUserLogin):
     return result
 
 #Update Likes
-@app.get('/updateLike')
-def update_likes(link: str ,num: int):
-    pass
+class Like_or_Dislike(BaseModel):
+    link : str
+    like : bool
+@app.post('/updateLikes')
+def update_likes(request : Like_or_Dislike):
+    if request.like:
+        updateLikes(request.link,1)
+    else:
+        updateLikes(request.link,-1)
+    return True
