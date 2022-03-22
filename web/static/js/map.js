@@ -52,17 +52,19 @@ function loadPosts(lat = defaultLoc[0], lon = defaultLoc[1], rad = defaultRad) {
         //console.log(response);
         // response is an array of post objects
 
-        response.forEach((post) => {
-            let lat = post["latitude"];
-            let lon = post["longitude"];
-            let link = post["link"];
+        if (response["result"] == "success") {
+            response["posts"].forEach((post) => {
+                let lat = post["latitude"];
+                let lon = post["longitude"];
+                let link = post["link"];
 
-            if (videoMarkers[link] == null) {
-                let marker = L.marker([lat, lon]).addTo(map);
-                marker.bindPopup(getPopupElement(post), { maxWidth: "auto" });
-                videoMarkers[link] = marker;
-            }
-        });
+                if (videoMarkers[link] == null) {
+                    let marker = L.marker([lat, lon]).addTo(map);
+                    marker.bindPopup(getPopupElement(post), { maxWidth: "auto" });
+                    videoMarkers[link] = marker;
+                }
+            });
+        }
 
     });
 }

@@ -47,6 +47,8 @@ async function onSignup() {
         if (response != null) {
             alert("Successfully created a new account.");
             location.replace("/login");
+        } else {
+            alert("Failed to create an account: Username is taken, please try another username.");
         }
     });
 }
@@ -72,6 +74,7 @@ async function onLogin() {
         localStorage.setItem("username", username);
         localStorage.setItem("token", response["token"]);
         localStorage.setItem("tokenExpire", response["tokenExpire"]);
+        localStorage.setItem("loginMethod", "username");
 
         location.reload();
     });
@@ -93,6 +96,7 @@ function onGoogleLogin(response) {
             localStorage.setItem("username", response["username"]);
             localStorage.setItem("token", response["token"]);
             localStorage.setItem("tokenExpire", response["tokenExpire"]);
+            localStorage.setItem("loginMethod", "google");
 
             location.reload();
         });
