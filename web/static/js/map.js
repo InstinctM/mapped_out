@@ -8,7 +8,6 @@ let defaultRad = 15000;  // radius is in meters
 
 const map = L.map('map').setView(defaultLoc, 12);  // location, zoom
 
-
 L.tileLayer(
     'https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=aEvyw1adgGE2cO8JBfZJ',
     {
@@ -19,8 +18,21 @@ L.tileLayer(
 map.on('click', onMapClick);
 map.on('moveend', onMapMove);
 
-
+getUserLocation();
 loadPosts();
+
+
+function getUserLocation() {
+    // Call some geolocation api to get user's location
+    geoip2.city((response) => {
+        let lat = response["location"]["latitude"];
+        let lon = response["location"]["longitude"];
+        console.log(lat, lon);
+        map.setView([lat, lon], 12);
+    }, (error) => {
+        console.log(error);
+    });
+}
 
 function addMarkers(newMarkers) {
     videoMarkers.forEach((marker) => {
