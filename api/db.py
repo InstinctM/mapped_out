@@ -1,5 +1,6 @@
 #import this and use the functions to access the db
 
+from multiprocessing import synchronize
 from sqlalchemy import create_engine, Column, Integer, Float,String, null, MetaData
 from sqlalchemy.orm import declarative_base, sessionmaker
 from geopy import distance
@@ -90,7 +91,27 @@ def add_user(entry):
         print(err)
         session.rollback()
         return False
+def delete_video(entry):
+    try:
+        session.query(post).filter(post.link == entry).delete(synchronize_session=False)
+        session.commit()
+        return True
+    except Exception as err:
+        print(err)
+        session.rollback()
+        return False
 
+def return_video(id,link):
+    try:
+        print("Hello")
+        return session.query(post).filter((post.author == id) and (post.link == link)).scalar()
+    except Exception as err:
+        print(err)
+        session.rollback()
+        return False
+
+
+        
 def post_query_radius(latitude, longitude, radius): #assuming radius is in miles for now
     matches=[]
     for post_entry in session.query(post):
