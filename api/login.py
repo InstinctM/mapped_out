@@ -23,6 +23,8 @@ class LoginAuthentication:
         """
         # Get correctToken from database
         user = db.session.query(db.user).filter_by(userid=userId).scalar()
+        if (user == None):
+            return None
         correctToken = user.token
         tokenExpire = user.tokenExpire
         if (correctToken == None) or (tokenExpire == None):
@@ -41,7 +43,7 @@ class LoginAuthentication:
         """
         userId = hash(userDict["username"])
         # See if userId already exist in database
-        if(db.exists(db.user,db.user.userid==userId)):
+        if(db.exists(db.user, db.user.username == userDict["username"])):
             return False
 
         # Add default values
@@ -62,7 +64,7 @@ class LoginAuthentication:
         """
         # Get hashed password from database
 
-        user=db.session.query(db.user).filter_by(username=username).scalar()
+        user = db.session.query(db.user).filter(db.user.username==username and db.user.password!="").scalar()
         if (user == None):
             return None
         if (password == user.password):
@@ -89,9 +91,10 @@ class LoginAuthentication:
         """
         try:
             idinfo = id_token.verify_oauth2_token(credential, requests.Request(), cls.GOOGLE_CLIENT_ID)
-            userId = idinfo['sub']
+            print(idinfo['sub'])
+            userId = hash(idinfo['sub'])
+            print(userId)
             username = idinfo['name']
-            print(idinfo) # debug
         except ValueError:
             return None
 
@@ -101,9 +104,11 @@ class LoginAuthentication:
         if (user == None):
             # Need to think of a way to get their country if logging in for the first time
             # Create user with no password, indicating user signs in with google
-            user = db.user(userId, username, None, "", 0, "Country", 0)
+            user = db.user(userId, username, "", "", 0, "Country", 0)
         user.token = secrets.token_hex(32)
         user.tokenExpire = int(time.time() + cls.EXPIRE_TIME)
+
+        db.add_user(user)
 
         try:
             db.session.commit()
@@ -112,8 +117,27 @@ class LoginAuthentication:
             return None
 
         return {
-            "userid": userId,
+            "userid": str(userId), # javascript cannot take this big of an int
             "username": username,
             "token": user.token,
             "tokenExpire": user.tokenExpire,
         }
+        
+    @classmethod
+    def updateUserProfile(cls, userid, newUsername, password, newPassword, country):
+        user = db.session.query(db.user).filter(db.user.userid == userid).scalar()
+        if (db.exists(db.user, db.user.username == newUsername) and user.username != newUsername):
+            return {"result": "username-taken"}
+        if (user == None):
+            return {"result": "user-not-exist"}
+        if (user.password != password and user.password != ""):
+            return {"result": "wrong-old-password"}
+        user.username = newUsername
+        user.country = country
+        user.password = newPassword
+        try:
+            db.session.commit()
+        except Exception as err:
+            print(err)
+            return {"result": "db-failed"}
+        return {"result": "success"}

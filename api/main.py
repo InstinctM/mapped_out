@@ -109,7 +109,6 @@ class UserSignUp (BaseModel):
     username : str
     password : str
     country : str
-    
 @app.post('/signup')
 def signup(user: UserSignUp):
     result = LoginAuthentication.createNewUser(user.dict())
@@ -120,7 +119,6 @@ def signup(user: UserSignUp):
 class UserLogin(BaseModel):
     username : str
     password : str
-
 @app.post('/user-login')
 def user_login(user : UserLogin):
     result = LoginAuthentication.login(user.username, user.password)
@@ -129,11 +127,27 @@ def user_login(user : UserLogin):
 
 class GUserLogin(BaseModel):
     token : str
-
 @app.post('/google-login')
 def google_login(guser : GUserLogin):
     result = LoginAuthentication.googleLogin(guser.token)
     return result
+
+class UserUpdate(BaseModel):
+    userid : int
+    token : str
+    newUsername : str
+    password : str
+    newPassword : str
+    country : str
+@app.post('/user-update')
+def user_update(request : UserUpdate):
+    user = LoginAuthentication.authenticate(request.userid, request.token)
+    if user == None: 
+        return {"result": "unauthorized"}
+    return LoginAuthentication.updateUserProfile(
+        request.userid, request.newUsername, request.password, request.newPassword, request.country,
+    )
+
 
 #Update Likes
 class Like_or_Dislike(BaseModel):
