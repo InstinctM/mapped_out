@@ -69,6 +69,36 @@ function loadPosts(lat = defaultLoc[0], lon = defaultLoc[1], rad = defaultRad) {
     });
 }
 
+function deleteVideo(userLink){
+    id = localStorage.getItem("userid")
+    local_token = localStorage.getItem("token")
+    httpPost(API_URL + "/delete",{
+        userid  : id,
+        token : local_token,
+        link: userLink
+    }, (response) =>{
+        if (response) {
+            location.reload()
+        } else {
+            return
+        }
+    }
+    )
+}
+
+function updateLikes(link,bool){
+    httpPost(API_URL + "/updateLikes",{
+        link  : link,
+        like : bool,
+    }, (response) =>{
+        if (response) {
+            location.reload()
+        } else {
+            return
+        }
+    }
+    )
+}
 
 function onMapMove(e) {
     const RAD_SCALE = 69;  // Convert degrees to miles (nice)
@@ -104,6 +134,10 @@ function getPopupElement(post) {
         <a class="mt-1" href="${link}">${link}</a>
         <p class="my-1">by <b>${post["username"]}</b></p>
         <p class="my-1">${post["likes"]} likes</p>
+        <button type = "button" onclick="deleteVideo('${link}')"> Delete </button>
+        <button type = "button" onclick="updateLikes('${link}',true)"> Like </button>
+        <button type = "button" onclick="updateLikes('${link}',false)"> DisLike </button>
+
     </div>
     `;
 

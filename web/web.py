@@ -2,6 +2,8 @@ from flask import Flask, request, render_template
 
 app = Flask(__name__, static_folder='static')
 
+print("The server should now be online, if you are having problems connecting use http rather than https. We don't have a ssl certificate")
+
 # Web Pages
 @app.route("/", methods = ["GET"])
 def landingPage():
