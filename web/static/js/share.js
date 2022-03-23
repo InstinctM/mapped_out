@@ -29,3 +29,17 @@ function httpPost(url, data, callback) {
         success: callback,
     });
 }
+
+/// Clear localstorage to force user to login again
+function logoutAll() {
+    localStorage.removeItem("userid");
+    localStorage.removeItem("username");
+    localStorage.removeItem("token");
+    localStorage.removeItem("tokenExpire");
+    localStorage.removeItem("loginMethod");
+
+    try {
+        google.accounts.id.disableAutoSelect();
+    } catch {
+    }
+}

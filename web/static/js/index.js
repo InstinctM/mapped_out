@@ -1,21 +1,13 @@
-updateNavLoginBtn();
-function updateNavLoginBtn() {
+updateNavBtns();
+function updateNavBtns() {
     const loginButton = document.getElementById("nav-login-btn");
+    const newPostButton = document.getElementById("new-post-btn");
     let username = localStorage.getItem("username");
     if (username != null) {
         loginButton.innerText = username;
+        newPostButton.style.display = "block";
     }
+
 }
 
-/// Clear localstorage to force user to login again
-function logoutAll() {
-    localStorage.removeItem("userid");
-    localStorage.removeItem("username");
-    localStorage.removeItem("token");
-    localStorage.removeItem("tokenExpire");
 
-    try {
-        google.accounts.id.disableAutoSelect();
-    } catch {
-    }
-}

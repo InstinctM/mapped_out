@@ -64,7 +64,9 @@
     let now = Date.now() / 1000;
     console.log(now);
     console.log(tokenExpire);
-    if (userid != null && now < tokenExpire) {
+    if (now >= tokenExpire) {
+        logoutAll();
+    } else if (userid != null) {
         location.replace("/login?loggedin=true");
     }
 </script>

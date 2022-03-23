@@ -2,11 +2,16 @@
 let videoMarkers = {};
 
 
-// Get user locatoin?
-let defaultLoc = [53.4674, -2.2339];  // [lat, lon]
-let defaultRad = 15000;  // radius is in meters
+// new post marker
+let newPostMarker = L.marker([0, 0]);
 
-const map = L.map('map').setView(defaultLoc, 12);  // location, zoom
+// Get user locatoin?
+const defaultLoc = [53.4674, -2.2339];  // [lat, lon]
+const defaultRad = 15000;  // radius is in miles
+const defaultZoom = 10;  // 0-18
+
+const map = L.map('map').setView(defaultLoc, defaultZoom);  // location, zoom
+map.setMinZoom(3).setMaxBounds([[90, -200], [-90, 200]]);
 
 L.tileLayer(
     'https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=aEvyw1adgGE2cO8JBfZJ',
@@ -34,14 +39,6 @@ function getUserLocation() {
     });
 }
 
-function addMarkers(newMarkers) {
-    videoMarkers.forEach((marker) => {
-        if (!marker in newMarkers) {
-            marker.remove()
-        }
-    });
-    videoMarkers = newMarkers;
-}
 
 function loadPosts(lat = defaultLoc[0], lon = defaultLoc[1], rad = defaultRad) {
     httpGet(API_URL + "/get-posts", {
@@ -69,21 +66,26 @@ function loadPosts(lat = defaultLoc[0], lon = defaultLoc[1], rad = defaultRad) {
     });
 }
 
+function postUpdated(link) {
+    videoMarkers[link].remove();
+    delete videoMarkers[link];  // Force to get item from database again
+    loadPosts();
+}
+
 function deleteVideo(userLink) {
-    id = localStorage.getItem("userid")
-    local_token = localStorage.getItem("token")
+    id = localStorage.getItem("userid");
+    local_token = localStorage.getItem("token");
     httpPost(API_URL + "/delete", {
         userid: id,
         token: local_token,
         link: userLink
     }, (response) => {
         if (response) {
-            location.reload()
+            postUpdated(userLink);
         } else {
-            return
+            alert("Failed to delete video");
         }
-    }
-    )
+    });
 }
 
 function updateLikes(link, bool) {
@@ -92,12 +94,11 @@ function updateLikes(link, bool) {
         like: bool,
     }, (response) => {
         if (response) {
-            location.reload()
+            postUpdated(link);
         } else {
-            return
+            console.log("Failed to like video");
         }
-    }
-    )
+    });
 }
 
 function onMapMove(e) {
@@ -114,9 +115,41 @@ function onMapMove(e) {
 }
 
 
+// Select location for posting video
 function onMapClick(e) {
-    //let lat = e.latlng.lat;
-    //let lon = e.latlng.lng;
+    let lat = e.latlng.lat;
+    let lon = e.latlng.lng;
+
+    if (localStorage.getItem("userid") != null) {
+        let newPostPopup = `
+            <div class="row justify-content-between" style="width: 260px;">
+                <div class="btn-group" role="group">
+                    <button class="btn btn-primary" onclick="newPost(${lat}, ${lon})">Create New Post</button>
+                    <button class="btn" style="color: gray;" onclick="closeNewPostPopup()"><i class="bi bi-x"></i></button>
+                </div>
+            </div>
+        `;
+
+        newPostMarker.setLatLng([lat, lon]);
+        newPostMarker.addTo(map);
+        newPostMarker.bindPopup(
+            newPostPopup,
+            {
+                maxWidth: "auto",
+                closeButton: false,
+            }
+        ).openPopup();
+    }
+}
+
+function newPost(lat, lon) {
+    closeNewPostPopup();
+    location.replace(`/post-video?lat=${lat}&lon=${lon}`);
+}
+
+function closeNewPostPopup() {
+    newPostMarker.closePopup();
+    newPostMarker.remove();
 }
 
 function getPopupElement(post) {
