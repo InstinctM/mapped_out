@@ -10,6 +10,8 @@ killall -w uvicorn
 
 echo Starting Flask web server...
 
+export PYTHONHASHSEED=0  # make sure hash function returns the same result every time
+
 cd web
 export FLASK_APP=web.py
 export FLASK_ENV=development  # Comment out for production

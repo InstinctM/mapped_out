@@ -61,7 +61,7 @@ class Video_Post (BaseModel):
 def post(request : Video_Post):
     user = LoginAuthentication.authenticate(request.userid, request.token)
     if user == None: # authenticate user
-        return None
+        return {"result": "unauthorized"}
     user_video  = db_post(
         author = request.userid,
         link = request.link,
@@ -73,7 +73,7 @@ def post(request : Video_Post):
     )
     if add_post(user_video): # add_post returns true if success
         return {"result": "success"}
-    return None
+    return {"result": "fail-add"}
 
 # Get Videos from DB!
 class GetPosts(BaseModel):

@@ -47,7 +47,7 @@ class LoginAuthentication:
             return False
 
         # Add default values
-        userDict["userid"]=userId
+        userDict["userid"] = userId
         userDict["token"] = ""
         userDict["tokenExpire"] = 0
         userDict["points"] = 0
@@ -64,7 +64,7 @@ class LoginAuthentication:
         """
         # Get hashed password from database
 
-        user = db.session.query(db.user).filter(db.user.username==username and db.user.password!="").scalar()
+        user = db.session.query(db.user).filter(db.user.username == username, db.user.password != "").first()
         if (user == None):
             return None
         if (password == user.password):
@@ -102,7 +102,6 @@ class LoginAuthentication:
         # If not, then create new user with the given userid
         user = db.session.query(db.user).filter_by(userid=userId).scalar()
         if (user == None):
-            # Need to think of a way to get their country if logging in for the first time
             # Create user with no password, indicating user signs in with google
             user = db.user(userId, username, "", "", 0, "Country", 0)
         user.token = secrets.token_hex(32)
@@ -118,7 +117,7 @@ class LoginAuthentication:
 
         return {
             "userid": str(userId), # javascript cannot take this big of an int
-            "username": username,
+            "username": user.username,
             "token": user.token,
             "tokenExpire": user.tokenExpire,
         }
