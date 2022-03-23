@@ -27,3 +27,7 @@ def userEditPage():
 @app.route("/signup", methods = ["GET"])
 def signupPage():
     return render_template("signup.html")
+
+@app.route("/post-video", methods = ["GET"])
+def postVideo():
+    return render_template("postvideo.html")
