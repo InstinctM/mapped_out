@@ -20,6 +20,10 @@ def loginPage():
         return render_template("user.html")
     return render_template("login.html")
 
+@app.route("/user-edit", methods = ["GET"])
+def userEditPage():
+    return render_template("useredit.html")
+
 @app.route("/signup", methods = ["GET"])
 def signupPage():
     return render_template("signup.html")

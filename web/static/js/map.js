@@ -8,7 +8,6 @@ let defaultRad = 15000;  // radius is in meters
 
 const map = L.map('map').setView(defaultLoc, 12);  // location, zoom
 
-
 L.tileLayer(
     'https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=aEvyw1adgGE2cO8JBfZJ',
     {
@@ -19,8 +18,21 @@ L.tileLayer(
 map.on('click', onMapClick);
 map.on('moveend', onMapMove);
 
-
+getUserLocation();
 loadPosts();
+
+
+function getUserLocation() {
+    // Call some geolocation api to get user's location
+    geoip2.city((response) => {
+        let lat = response["location"]["latitude"];
+        let lon = response["location"]["longitude"];
+        console.log(lat, lon);
+        map.setView([lat, lon], 12);
+    }, (error) => {
+        console.log(error);
+    });
+}
 
 function addMarkers(newMarkers) {
     videoMarkers.forEach((marker) => {
@@ -40,29 +52,31 @@ function loadPosts(lat = defaultLoc[0], lon = defaultLoc[1], rad = defaultRad) {
         //console.log(response);
         // response is an array of post objects
 
-        response.forEach((post) => {
-            let lat = post["latitude"];
-            let lon = post["longitude"];
-            let link = post["link"];
+        if (response["result"] == "success") {
+            response["posts"].forEach((post) => {
+                let lat = post["latitude"];
+                let lon = post["longitude"];
+                let link = post["link"];
 
-            if (videoMarkers[link] == null) {
-                let marker = L.marker([lat, lon]).addTo(map);
-                marker.bindPopup(getPopupElement(post), { maxWidth: "auto" });
-                videoMarkers[link] = marker;
-            }
-        });
+                if (videoMarkers[link] == null) {
+                    let marker = L.marker([lat, lon]).addTo(map);
+                    marker.bindPopup(getPopupElement(post), { maxWidth: "auto" });
+                    videoMarkers[link] = marker;
+                }
+            });
+        }
 
     });
 }
 
-function deleteVideo(userLink){
+function deleteVideo(userLink) {
     id = localStorage.getItem("userid")
     local_token = localStorage.getItem("token")
-    httpPost(API_URL + "/delete",{
-        userid  : id,
-        token : local_token,
+    httpPost(API_URL + "/delete", {
+        userid: id,
+        token: local_token,
         link: userLink
-    }, (response) =>{
+    }, (response) => {
         if (response) {
             location.reload()
         } else {
@@ -72,11 +86,11 @@ function deleteVideo(userLink){
     )
 }
 
-function updateLikes(link,bool){
-    httpPost(API_URL + "/updateLikes",{
-        link  : link,
-        like : bool,
-    }, (response) =>{
+function updateLikes(link, bool) {
+    httpPost(API_URL + "/updateLikes", {
+        link: link,
+        like: bool,
+    }, (response) => {
         if (response) {
             location.reload()
         } else {
@@ -101,15 +115,21 @@ function onMapMove(e) {
 
 
 function onMapClick(e) {
-    let lat = e.latlng.lat;
-    let lon = e.latlng.lng;
+    //let lat = e.latlng.lat;
+    //let lon = e.latlng.lng;
 }
 
 function getPopupElement(post) {
     let link = post["link"];
+    let username = localStorage.getItem("username");
+
+    let deleteBtn = "";
+    if (username == post["username"]) { // only display delete button if it is this user's video
+        deleteBtn = `<button type="button" class="btn btn-danger" onclick="deleteVideo('${link}')"> <i class="bi bi-trash-fill"></i> </button>`;
+    }
 
     let popupElement = `
-    <div class="marker-popup" style="width: 480px; height: 400px;">
+    <div class="marker-popup" style="width: 480px; height: 420px;">
         <h4>${post["description"]}</h4>
         <div class="mx-auto" style="width: 460px; height: 260px;">
         <iframe width="460" height="260" src="${link}"
@@ -120,10 +140,9 @@ function getPopupElement(post) {
         <a class="mt-1" href="${link}">${link}</a>
         <p class="my-1">by <b>${post["username"]}</b></p>
         <p class="my-1">${post["likes"]} likes</p>
-        <button type = "button" onclick="deleteVideo('${link}')"> Delete </button>
-        <button type = "button" onclick="updateLikes('${link}',true)"> Like </button>
-        <button type = "button" onclick="updateLikes('${link}',false)"> DisLike </button>
-
+        <button type="button" class="btn btn-primary" onclick="updateLikes('${link}',true)"> <i class="bi bi-hand-thumbs-up-fill"></i> </button>
+        <button type="button" class="btn btn-secondary" onclick="updateLikes('${link}',false)"> <i class="bi bi-hand-thumbs-down-fill"></i> </button>
+        ${deleteBtn}
     </div>
     `;
 
