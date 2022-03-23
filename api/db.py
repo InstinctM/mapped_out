@@ -103,7 +103,8 @@ def delete_video(entry):
 
 def return_video(id,link):
     try:
-        return session.query(post).filter((post.author == id) and (post.link == link)).scalar()
+        print(id, link)
+        return session.query(post).filter(post.author == id, post.link == link).scalar()
     except Exception as err:
         print(err)
         session.rollback()
