@@ -126,6 +126,7 @@ def post_query_radius(latitude, longitude, radius): #assuming radius is in miles
                 continue # ignore this post
                 #return {"result": "author-not-found"}
             matches.append({
+                "userid": author.userid,
                 "username": author.username,
                 "link": post_entry.link,
                 "description": post_entry.description,
