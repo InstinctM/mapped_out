@@ -52,7 +52,7 @@
 
 <script src="../static/js/postvideo.js"></script>
 <script>
-    if (localStorage.getItem("userid") == null) {
+    if (!checkLoginStatus()) {
         location.replace("/login");
     }
 </script>
