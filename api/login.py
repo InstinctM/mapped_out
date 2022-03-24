@@ -75,7 +75,7 @@ class LoginAuthentication:
             try:
                 db.session.commit()
                 return {
-                    "userid": user.userid,
+                    "userid": str(user.userid), # javascript cannot take this big of an int
                     "token": user.token,
                     "tokenExpire": user.tokenExpire,
                 }
