@@ -34,3 +34,6 @@ def signupPage():
 def postVideo():
     return render_template("postvideo.html")
 
+@app.route("/country-select", methods = ["GET"])
+def countrySelect():
+    return render_template("country-select.html")

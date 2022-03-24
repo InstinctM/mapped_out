@@ -142,7 +142,9 @@ def return_video(id,link):
 
 def updateLikes(link,upOrDown):
     video = session.query(post).filter(post.link == link).first()
-    video.likes +=upOrDown
+    author = session.query(user).filter(user.userid == video.author).scalar()
+    video.likes += upOrDown
+    author.points += upOrDown
     session.commit()
     
 def post_query_radius(latitude, longitude, radius): #assuming radius is in miles for now

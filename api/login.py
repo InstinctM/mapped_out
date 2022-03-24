@@ -91,9 +91,7 @@ class LoginAuthentication:
         """
         try:
             idinfo = id_token.verify_oauth2_token(credential, requests.Request(), cls.GOOGLE_CLIENT_ID)
-            print(idinfo['sub'])
             userId = hash(idinfo['sub'])
-            print(userId)
             username = idinfo['name']
         except ValueError:
             return None
@@ -133,7 +131,8 @@ class LoginAuthentication:
             return {"result": "wrong-old-password"}
         user.username = newUsername
         user.country = country
-        user.password = newPassword
+        if (newPassword != ""):
+            user.password = newPassword
         try:
             db.session.commit()
         except Exception as err:

@@ -1,14 +1,19 @@
+// Configurations
+const defaultLoc = [53.4674, -2.2339];  // [lat, lon]
+const defaultRad = 100;  // radius is in miles
+const defaultZoom = 10;  // 0-18
+
+const heatMapRad = 30;
+const heatMapWeight = 200;
+
+
+
+
+
 // use video link as key
 let videoMarkers = {};
-
-
 // new post marker
 let newPostMarker = L.marker([0, 0]);
-
-// Get user locatoin?
-const defaultLoc = [53.4674, -2.2339];  // [lat, lon]
-const defaultRad = 15000;  // radius is in miles
-const defaultZoom = 10;  // 0-18
 
 const map = L.map('map').setView(defaultLoc, defaultZoom);  // location, zoom
 map.setMinZoom(3).setMaxBounds([[90, -200], [-90, 200]]);
@@ -20,20 +25,21 @@ L.tileLayer(
     }
 ).addTo(map);
 
+const heatLayer = L.heatLayer([], { radius: heatMapRad }).addTo(map);
+
 map.on('click', onMapClick);
 map.on('moveend', onMapMove);
 
 getUserLocation();
-loadPosts();
-
 
 function getUserLocation() {
     // Call some geolocation api to get user's location
     geoip2.city((response) => {
         let lat = response["location"]["latitude"];
         let lon = response["location"]["longitude"];
-        console.log(lat, lon);
-        map.setView([lat, lon], 12);
+        //console.log(lat, lon);
+        loadPosts(lat, lon, defaultRad);
+        map.setView([lat, lon], defaultZoom);
     }, (error) => {
         console.log(error);
     });
@@ -59,6 +65,7 @@ function loadPosts(lat = defaultLoc[0], lon = defaultLoc[1], rad = defaultRad) {
                     let marker = L.marker([lat, lon]).addTo(map);
                     marker.bindPopup(getPopupElement(post), { maxWidth: "auto" });
                     videoMarkers[link] = marker;
+                    heatLayer.addLatLng([lat, lon, heatMapWeight]);
                 }
             });
         }
