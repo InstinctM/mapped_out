@@ -3,8 +3,8 @@ const defaultLoc = [53.4674, -2.2339];  // [lat, lon]
 const defaultRad = 100;  // radius is in miles
 const defaultZoom = 10;  // 0-18
 
-const heatMapRad = 30;
-const heatMapWeight = 200;
+const heatMapRad = 25;
+const heatMapWeight = 100;
 
 
 
@@ -38,8 +38,8 @@ function getUserLocation() {
         let lat = response["location"]["latitude"];
         let lon = response["location"]["longitude"];
         //console.log(lat, lon);
-        loadPosts(lat, lon, defaultRad);
         map.setView([lat, lon], defaultZoom);
+        onMapMove(null);
     }, (error) => {
         console.log(error);
     });
@@ -76,7 +76,7 @@ function loadPosts(lat = defaultLoc[0], lon = defaultLoc[1], rad = defaultRad) {
 function postUpdated(link) {
     videoMarkers[link].remove();
     delete videoMarkers[link];  // Force to get item from database again
-    loadPosts();
+    onMapMove(null);
 }
 
 function deleteVideo(userLink) {
