@@ -1,4 +1,6 @@
+checkLoginStatus();
 updateNavBtns();
+
 function updateNavBtns() {
     const loginButton = document.getElementById("nav-login-btn");
     const newPostButton = document.getElementById("new-post-btn");
@@ -9,5 +11,3 @@ function updateNavBtns() {
     }
 
 }
-
-
