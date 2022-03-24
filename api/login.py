@@ -140,3 +140,16 @@ class LoginAuthentication:
             print(err)
             return {"result": "db-failed"}
         return {"result": "success"}
+
+    @classmethod
+    def getUserProfile(cls, userid):
+        user = db.session.query(db.user).filter(db.user.userid == userid).scalar()
+        if (user == None):
+            return {"result": "user-not-exist"}
+        return {
+            "result": "success",
+            "userid": str(user.userid),
+            "username": user.username,
+            "country": user.country,
+            "points": user.points
+        }

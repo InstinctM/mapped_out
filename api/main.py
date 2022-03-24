@@ -160,3 +160,8 @@ def update_likes(request : Like_or_Dislike):
     else:
         updateLikes(request.link,-1)
     return True
+
+@app.get('/get-user')
+def getUser(userid : str):
+    useridint = int(userid)
+    return LoginAuthentication.getUserProfile(useridint)

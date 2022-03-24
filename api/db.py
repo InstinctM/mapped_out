@@ -4,6 +4,13 @@ from multiprocessing import synchronize
 from sqlalchemy import create_engine, Column, Integer, Float,String, null, MetaData
 from sqlalchemy.orm import declarative_base, sessionmaker
 from geopy import distance
+from time import sleep
+
+from opencage.geocoder import OpenCageGeocode
+from opencage.geocoder import InvalidInputError, RateLimitExceededError, UnknownError
+
+opencageKey="06fee6e0f0fd4b82972c28992c487837"
+geocoder=OpenCageGeocode(opencageKey)
 
 engine = create_engine('sqlite:///./mapped_out.db',connect_args={"check_same_thread": False})
 
@@ -72,6 +79,29 @@ session=Session()
 
 def add_post(entry):
     #entry is a post object
+
+    #reverse geocode
+    tries=0
+    while(tries<4):
+        try:
+            results=geocoder.reverse_geocode(entry.latitude,entry.longitude,language='en')
+            if results and len(results):
+                loc=results[0]['formatted']
+                entry.location=loc
+                break
+            else:
+                tries+=1
+                continue
+        except RateLimitExceededError as err:
+            print(err)
+            print("---- Opencage Rate Limit.")
+            sleep(1)
+            tries+=1
+            continue
+        except InvalidInputError as err:
+            print(err)
+            break
+
     try:
         session.add(entry)
         session.commit()
@@ -91,9 +121,9 @@ def add_user(entry):
         print(err)
         session.rollback()
         return False
-def delete_video(entry):
+def delete_video(link):
     try:
-        session.query(post).filter(post.link == entry).delete(synchronize_session=False)
+        session.query(post).filter(post.link == link).delete(synchronize_session=False)
         session.commit()
         return True
     except Exception as err:
@@ -126,6 +156,7 @@ def post_query_radius(latitude, longitude, radius): #assuming radius is in miles
                 continue # ignore this post
                 #return {"result": "author-not-found"}
             matches.append({
+                "userid": author.userid,
                 "username": author.username,
                 "link": post_entry.link,
                 "description": post_entry.description,
