@@ -15,9 +15,8 @@
             <input type="text" id="username" class="form-control" />
         </div>
 
-        <div class="mb-4">
-            <label class="form-label" for="country">Country</label>
-            <input type="text" id="country" class="form-control" />
+        <label class="form-label" for="country">Country</label>
+        <div id="country-select" class="mb-4">
         </div>
 
         <div id="passwords-container">
@@ -29,15 +28,16 @@
             <div class="mb-4">
                 <label class="form-label" for="password">Create New Password</label>
                 <input type="password" id="password" class="form-control" />
+                <p class="form-text">Leave blank if you do not want to change password</p>
             </div>
-            <div class="mb-4">
+            <div class="mb-5">
                 <label class="form-label" for="password2">Confirm New Password</label>
                 <input type="password" id="password2" class="form-control" />
             </div>
         </div>
 
         <div class="btn-group" role="group">
-            <button type="button" class="btn btn-secondary" onclick="location.replace('/login')">Cancel</button>
+            <button type="button" class="btn btn-outline-secondary" onclick="location.replace('/login')">Cancel</button>
             <button type="button" class="btn btn-success" onclick="onChangeUserProfile()">Confirm</button>
         </div>
     </div>
@@ -49,20 +49,37 @@
     function initInput() {
         let username = localStorage.getItem("username");
         let country = "Country";  // get user info from database
+        httpGet(API_URL + "/get-user", {
+            userid: localStorage.getItem("userid"),
+        }, (response) => {
+            if (response["result"] == "success") {
+                httpGet("/country-select", {}, (html) => {
+                    document.getElementById("country-select").innerHTML = html;
+                    document.getElementById("country-select").children[0].value = response["country"];
+                });
+            } else {
+                console.log(response);
+            }
+        });
+        
+
         document.getElementById("username").value = username;
-        document.getElementById("country").value = country;
         let method = localStorage.getItem("loginMethod");
         if (method == "google") {
             // hide the password section as google user doesn't need password
             document.getElementById("passwords-container").style.display = "none";
         }
     }
+
+
     async function onChangeUserProfile() {
         let username = document.getElementById("username").value;
-        let country = document.getElementById("country").value;
         let oldPassword = document.getElementById("passwordold").value;
         let password = document.getElementById("password").value;
         let password2 = document.getElementById("password2").value;
+
+        const countrySelector = document.getElementById("country-select").children[0];
+        let country = countrySelector.value;
 
         if (!validateUsername(username)) {
             alert("Invalid username");
@@ -71,7 +88,8 @@
 
         let method = localStorage.getItem("loginMethod");
         if (method != "google") {
-            if (password != password2) {
+            if (password == password2 && password == "") {
+            } else if (password != password2) {
                 alert("Password mismatch.");
                 return;
             } else if (!validatePassword(password)) {
@@ -81,8 +99,8 @@
         }
 
         let hashed = await hashPassword(password);
+        if (password == "") hashed = "";
         let hashedOld = await hashPassword(oldPassword);
-        // send request to api
         httpPost(API_URL + "/user-update", {
             "userid": localStorage.getItem("userid"),
             "token": localStorage.getItem("token"),

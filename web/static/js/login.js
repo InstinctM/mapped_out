@@ -23,7 +23,8 @@ async function onSignup() {
     let username = document.getElementById("username").value;
     let password = document.getElementById("password").value;
     let password2 = document.getElementById("password2").value;
-    let country = document.getElementById("country").value;
+    let country = document.getElementById("country-select").children[0].value;
+    console.log(country);
 
     if (!validateUsername(username)) {
         alert("Invalid username.");
