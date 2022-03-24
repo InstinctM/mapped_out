@@ -1,1 +1,4 @@
 */__pycache__/
+*/venv/
+api/mapped_out.db
+api/test.py

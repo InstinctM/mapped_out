@@ -1,0 +1,8 @@
+flask
+fastapi
+uvicorn
+sqlalchemy
+google-api-python-client
+requests
+geopy
+opencage

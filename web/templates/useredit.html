@@ -1,0 +1,110 @@
+{%extends "base.html" %}
+
+<!-- Change the title of this page HERE -->
+{%block title%}User Edit{%endblock%}
+
+
+{%block content%}
+
+<div class="container m-auto">
+    <div class="col-6 m-auto justify-content-center">
+        <h1 id="welcome-txt" class="my-4">Edit User Profile</h1>
+
+        <div class="mb-4">
+            <label class="form-label" for="username">Username</label>
+            <input type="text" id="username" class="form-control" />
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label" for="country">Country</label>
+            <input type="text" id="country" class="form-control" />
+        </div>
+
+        <div id="passwords-container">
+            <div class="mb-4">
+                <label class="form-label" for="passwordold">Old Password</label>
+                <input type="password" id="passwordold" class="form-control" />
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label" for="password">Create New Password</label>
+                <input type="password" id="password" class="form-control" />
+            </div>
+            <div class="mb-4">
+                <label class="form-label" for="password2">Confirm New Password</label>
+                <input type="password" id="password2" class="form-control" />
+            </div>
+        </div>
+
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-secondary" onclick="location.replace('/login')">Cancel</button>
+            <button type="button" class="btn btn-success" onclick="onChangeUserProfile()">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<script src="../static/js/login.js"></script>
+<script>
+    initInput();
+    function initInput() {
+        let username = localStorage.getItem("username");
+        let country = "Country";  // get user info from database
+        document.getElementById("username").value = username;
+        document.getElementById("country").value = country;
+        let method = localStorage.getItem("loginMethod");
+        if (method == "google") {
+            // hide the password section as google user doesn't need password
+            document.getElementById("passwords-container").style.display = "none";
+        }
+    }
+    async function onChangeUserProfile() {
+        let username = document.getElementById("username").value;
+        let country = document.getElementById("country").value;
+        let oldPassword = document.getElementById("passwordold").value;
+        let password = document.getElementById("password").value;
+        let password2 = document.getElementById("password2").value;
+
+        if (!validateUsername(username)) {
+            alert("Invalid username");
+            return;
+        }
+
+        let method = localStorage.getItem("loginMethod");
+        if (method != "google") {
+            if (password != password2) {
+                alert("Password mismatch.");
+                return;
+            } else if (!validatePassword(password)) {
+                alert("Password must be at least 8-character long, contain upper and lower case letters and contain at least one numeric character.");
+                return;
+            }
+        }
+
+        let hashed = await hashPassword(password);
+        let hashedOld = await hashPassword(oldPassword);
+        // send request to api
+        httpPost(API_URL + "/user-update", {
+            "userid": localStorage.getItem("userid"),
+            "token": localStorage.getItem("token"),
+            "newUsername": username,
+            "country": country,
+            "password": hashedOld,
+            "newPassword": hashed,
+        }, (response) => {
+            let result = response["result"];
+            if (result == "success") {
+                alert("Successfully update user profile");
+                localStorage.setItem("username", username);
+                location.replace("/login");
+            } else if (result == "username-taken") {
+                alert("Failed to update profile: Username is taken, try another username.");
+            } else if (result == "wrong-old-password") {
+                alert("Failed to update profile: The old password is wrong.");
+            } else {
+                alert("Failed to update profile: Unauthorized access.");
+            }
+        });
+    }
+</script>
+
+{%endblock%}
