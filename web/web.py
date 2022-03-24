@@ -13,7 +13,7 @@ def landingPage():
 
 @app.route("/about", methods = ["GET"])
 def aboutPage():
-    return render_template("about.html")
+    return render_template("landpage.html")
 
 @app.route("/login", methods = ["GET"])
 def loginPage():
@@ -34,6 +34,3 @@ def signupPage():
 def postVideo():
     return render_template("postvideo.html")
 
-@app.route("/landpage", methods = ["GET"])
-def landpage():
-    return render_template("landpage.html")

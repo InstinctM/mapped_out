@@ -11,3 +11,10 @@ function updateNavBtns() {
     }
 
 }
+
+
+let firstTime = localStorage.getItem("first-time");
+if (firstTime == null) {
+    localStorage.setItem("first-time", false);
+    location.replace("/about");
+}
