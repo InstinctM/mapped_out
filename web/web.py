@@ -33,3 +33,7 @@ def signupPage():
 @app.route("/post-video", methods = ["GET"])
 def postVideo():
     return render_template("postvideo.html")
+
+@app.route("/landpage", methods = ["GET"])
+def landpage():
+    return render_template("landpage.html")
