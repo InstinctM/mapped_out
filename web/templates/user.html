@@ -11,8 +11,8 @@
         <h1 id="welcome-txt" class="my-4">Welcome {username}</h1>
 
         <div class="row my-2 justify-content-between">
-            <h5 class="col-6">Country: United Kingdom</h5>
-            <h5 class="col-6">Points: 0</h5>
+            <h5 class="col-6">Country: <span id="country">---<span></h5>
+            <h5 class="col-6">Points: <span id="points">---</span></h5>
         </div>
 
         <a class="link-primary" href="/user-edit">Edit profile and Change password</a>
@@ -25,8 +25,20 @@
 <script>
     updateUserPage();
     function updateUserPage() {
+        let userid = localStorage.getItem("userid");
         let username = localStorage.getItem("username");
         document.getElementById("welcome-txt").innerText = `Welcome ${username}!`;
+        httpGet(API_URL + "/get-user", {
+            "userid": userid,
+        }, (response) => {
+            console.log(response);
+            if (response["result"] == "success") {
+                document.getElementById("country").innerText = response["country"];
+                document.getElementById("points").innerText = response["points"];
+            } else {
+                console.log("Failed to get user profile.");
+            }
+        });
     }
 </script>
 
