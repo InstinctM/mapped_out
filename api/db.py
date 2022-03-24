@@ -154,9 +154,8 @@ def post_query_radius(latitude, longitude, radius): #assuming radius is in miles
             author = session.query(user).filter(user.userid == post_entry.author).scalar()
             if author == None: # Should not happen
                 continue # ignore this post
-                #return {"result": "author-not-found"}
             matches.append({
-                "userid": author.userid,
+                "userid": str(author.userid),
                 "username": author.username,
                 "link": post_entry.link,
                 "description": post_entry.description,
