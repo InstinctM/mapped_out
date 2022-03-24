@@ -12,21 +12,47 @@
 
         <div class="row my-2 justify-content-between">
             <h5 class="col-6">Country: United Kingdom</h5>
-            <h5 class="col-6">Points: 0</h5>
+            <h5 class="col-6" id="point-cnt">Points: {points}</h5>
         </div>
-
         <a class="link-primary" href="/user-edit">Edit profile and Change password</a>
 
         <button class="btn btn-secondary btn-block mt-3" style="width:100%" onclick="onLogout()">Logout</button>
     </div>
 </div>
 
-<script src="../static/js/login.js"></script>
+<script src="../static/js/login.js">
+</script>
+
 <script>
+    function getPoints(){
+        httpGet(API_URL + "/get-posts", {
+        lat: 0,
+        lon: 0,
+        radius: 9999999999999 // Get All Videos,
+    }, 
+    (response) => {
+        // response is an array of post objects
+        let id = localStorage.getItem("userid")
+        let cnt = 0
+        if (response["result"] == "success") 
+        {
+        response["posts"].forEach((post) => {
+            if (post["id"] == id){
+                cnt += post["likes"]
+                }
+            })
+        }
+        localStorage.setItem("cnt",cnt)
+    });
+}
     updateUserPage();
-    function updateUserPage() {
+    function updateUserPage() 
+    {
+        getPoints()
         let username = localStorage.getItem("username");
+        let cnt = localStorage.getItem("cnt")
         document.getElementById("welcome-txt").innerText = `Welcome ${username}!`;
+        document.getElementById("point-cnt").innerText = `Points: ${cnt}`;
     }
 </script>
 
