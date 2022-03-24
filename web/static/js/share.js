@@ -43,3 +43,14 @@ function logoutAll() {
     } catch {
     }
 }
+
+function checkLoginStatus() {
+    let tokenExpire = localStorage.getItem("tokenExpire");
+    if (tokenExpire == null) return false;
+    let now = Date.now() / 1000;
+    if (now >= tokenExpire) {
+        logoutAll();
+        return false;
+    }
+    return true;
+}

@@ -77,8 +77,12 @@ function onPostVideo() {
     }, (response) => {
         if (response["result"] == "success") {
             location.replace("/");
+        } else if (response["result"] == "unauthorized") {
+            alert("Error posting video: " + "Unauthorized.");
+            logoutAll();
+            location.replace("/login");
         } else {
-            alert("Error posting video: " + response.toString());
+            alert("Error posting video: " + JSON.stringify(response));
         }
     });
 }

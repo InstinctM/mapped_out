@@ -59,14 +59,7 @@
 
 <script src="../static/js/login.js"></script>
 <script>
-    let userid = localStorage.getItem("userid");
-    let tokenExpire = localStorage.getItem("tokenExpire");
-    let now = Date.now() / 1000;
-    console.log(now);
-    console.log(tokenExpire);
-    if (now >= tokenExpire) {
-        logoutAll();
-    } else if (userid != null) {
+    if (checkLoginStatus()) {
         location.replace("/login?loggedin=true");
     }
 </script>
