@@ -15,11 +15,22 @@ let locSelMarker = L.marker([0, 0]).addTo(map);
 
 
 
-getURLLocation();
-function getURLLocation() {
+getURLParams();
+function getURLParams() {
     let param = new URLSearchParams(location.search);
-    let lat = param.get("lat");
-    let lon = param.get("lon");
+    let link = param.get("link");
+    let title = param.get("description");
+    let lat = param.get("latitude");
+    let lon = param.get("longitude");
+
+    if (title != null) document.getElementById("title").value = title;
+    if (link != null) {
+        let videoId = link.split("embed/")[1]; // only get the youtube video id part
+        document.getElementById("link").value = videoId;
+        document.getElementById("new-vid-text").innerText = "Edit Video";
+        document.getElementById("post-btn").innerText = "Edit";
+    }
+
     if (lat == null || lon == null) {
         geoip2.city((response) => {
             setLocation(response["location"]["latitude"], response["location"]["longitude"]);
@@ -48,7 +59,7 @@ function setLocation(selLat, selLon) {
     locSelMarker.setLatLng([lat, lon]);
 }
 
-function onPostVideo() {
+function onPostVideo() {  // Or edit if url parameter has link specified
     let title = document.getElementById("title").value;
     let ytVideoId = document.getElementById("link").value;
     let link = "https://www.youtube.com/embed/" + ytVideoId;
@@ -65,6 +76,31 @@ function onPostVideo() {
     let userid = localStorage.getItem("userid");
     let token = localStorage.getItem("token");
     let loc = "Do geocoding on backend";
+
+    let param = new URLSearchParams(location.search);
+    let urlLink = param.get("link");
+    if (urlLink != null) { // Edit Video
+        httpPost(API_URL + "/edit-video", {
+            userid: localStorage.getItem("userid"),
+            token: localStorage.getItem("token"),
+            oldlink: urlLink,
+            link: link,
+            description: title,
+            lat: lat,
+            lon: lon,
+        }, (response) => {
+            console.log(response);
+            if (response["result"] == "success") {
+                location.replace("/");
+            } else if (response["result"] == "unauthorized") {
+                logoutAll();
+                location.replace("/login");
+            } else {
+                alert("Failed to edit post: " + JSON.stringify(response));
+            }
+        });
+        return;
+    }
 
     httpPost(API_URL + "/post", {
         "userid": userid,

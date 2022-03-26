@@ -133,32 +133,58 @@ def search_location(find_s):
         print(err)
         return None
 
-def modify_post(link_n,author_n=None,desc_n=None,likes_n=None,lat_n=None,long_n=None,loc_n=None):
+def modify_post(link_n,newlink_n=None,author_n=None,desc_n=None,likes_n=None,lat_n=None,long_n=None,loc_n=None):
     #use keywords as arguements, only changes for those given
-        result=session.query(post).filter(post.link==link_n).scalar()
-        if result==None:
-            return False
-        else:
-            #this is lazy and makes me look like i did a lot of hard coding ;)
-            if author_n!=None:
-                result.author=author_n
-            if desc_n!=None:
-                result.description=desc_n
-            if likes_n!=None:
-                result.likes=likes_n
-            if lat_n!=None:
-                result.latitude=lat_n
-            if long_n!=None:
-                result.longitude=long_n
-            if loc_n!=None:
-                result.location=loc_n
+    result=session.query(post).filter(post.link==link_n).scalar()
+    if result==None:
+        return False
+    else:
+        #this is lazy and makes me look like i did a lot of hard coding ;)
+        if newlink_n!=None:
+            result.link=newlink_n
+        if author_n!=None:
+            result.author=author_n
+        if desc_n!=None:
+            result.description=desc_n
+        if likes_n!=None:
+            result.likes=likes_n
+        if lat_n!=None:
+            result.latitude=lat_n
+        if long_n!=None:
+            result.longitude=long_n
+        if loc_n!=None:
+            result.location=loc_n
+        
+        #reverse geocode
+        tries=0
+        while(tries<4):
             try:
-                session.commit()
-                return True
-            except Exception as err:
+                geocode_results=geocoder.reverse_geocode(result.latitude,result.longitude,language='en')
+                if geocode_results and len(geocode_results):
+                    loc=geocode_results[0]['formatted']
+                    result.location=loc
+                    break
+                else:
+                    tries+=1
+                    continue
+            except RateLimitExceededError as err:
                 print(err)
-                session.rollback()
-                return False
+                print("---- Opencage Rate Limit.")
+                sleep(1)
+                tries+=1
+                continue
+            except InvalidInputError as err:
+                print(err)
+                break
+
+
+        try:
+            session.commit()
+            return True
+        except Exception as err:
+            print(err)
+            session.rollback()
+            return False
 
 def add_user(entry):
     #entry is a user object

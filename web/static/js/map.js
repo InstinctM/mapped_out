@@ -8,7 +8,7 @@ const heatMapWeight = 100;
 
 
 
-
+let posts = {};
 
 // use video link as key
 let videoMarkers = {};
@@ -61,6 +61,8 @@ function loadPosts(lat = defaultLoc[0], lon = defaultLoc[1], rad = defaultRad) {
                 let lon = post["longitude"];
                 let link = post["link"];
 
+                posts[link] = post;
+
                 if (videoMarkers[link] == null) {
                     let marker = L.marker([lat, lon]).addTo(map);
                     marker.bindPopup(getPopupElement(post), { maxWidth: "auto" });
@@ -82,6 +84,7 @@ function postUpdated(link) {
 function deleteVideo(userLink) {
     id = localStorage.getItem("userid");
     local_token = localStorage.getItem("token");
+    if (!confirm("Are you sure to delete this video?")) return;
     httpPost(API_URL + "/delete", {
         userid: id,
         token: local_token,
@@ -93,6 +96,12 @@ function deleteVideo(userLink) {
             alert("Failed to delete video");
         }
     });
+}
+
+function editVideo(link) {
+    let post = posts[link];
+    let param = $.param(post);
+    location.replace("/post-video?" + param);
 }
 
 function updateLikes(link, bool) {
@@ -151,7 +160,7 @@ function onMapClick(e) {
 
 function newPost(lat, lon) {
     closeNewPostPopup();
-    location.replace(`/post-video?lat=${lat}&lon=${lon}`);
+    location.replace(`/post-video?latitude=${lat}&longitude=${lon}`);
 }
 
 function closeNewPostPopup() {
@@ -164,8 +173,10 @@ function getPopupElement(post) {
     let username = localStorage.getItem("username");
 
     let deleteBtn = "";
+    let editBtn = "";
     if (username == post["username"]) { // only display delete button if it is this user's video
         deleteBtn = `<button type="button" class="btn btn-danger" onclick="deleteVideo('${link}')"> <i class="bi bi-trash-fill"></i> </button>`;
+        editBtn = `<button type="button" class="btn btn-light" onclick="editVideo('${link}')"> <i class="bi bi-pencil-fill"></i> </button>`;
     }
 
     let popupElement = `
@@ -180,9 +191,19 @@ function getPopupElement(post) {
         <a class="mt-1" href="${link}">${link}</a>
         <p class="my-1">by <b>${post["username"]}</b></p>
         <p class="my-1">${post["likes"]} likes</p>
-        <button type="button" class="btn btn-primary" onclick="updateLikes('${link}',true)"> <i class="bi bi-hand-thumbs-up-fill"></i> </button>
-        <button type="button" class="btn btn-secondary" onclick="updateLikes('${link}',false)"> <i class="bi bi-hand-thumbs-down-fill"></i> </button>
-        ${deleteBtn}
+
+        <div class="row justify-content-between" style="width: 480px;">
+            <div class="col-2 btn-group">
+                <button type="button" class="btn btn-outline-primary" onclick="updateLikes('${link}',true)">
+                    <i class="bi bi-hand-thumbs-up-fill"></i> </button>
+                <button type="button" class="btn btn-outline-secondary" onclick="updateLikes('${link}',false)">
+                    <i class="bi bi-hand-thumbs-down-fill"></i> </button>
+            </div>
+            <div class="col-2 btn-group">
+                ${editBtn}
+                ${deleteBtn}
+            </div>
+        </div>
     </div>
     `;
 
