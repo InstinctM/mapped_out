@@ -111,6 +111,33 @@ def add_post(entry):
         session.rollback()
         return False
 
+def modify_post(link_n,author_n=None,desc_n=None,likes_n=None,lat_n=None,long_n=None,loc_n=None):
+    #use keywords as arguements, only changes for those given
+        result=session.query(post).filter(post.link==link_n).scalar()
+        if result==None:
+            return False
+        else:
+            #this is lazy and makes me look like i did a lot of hard coding ;)
+            if author_n!=None:
+                result.author=author_n
+            if desc_n!=None:
+                result.description=desc_n
+            if likes_n!=None:
+                result.likes=likes_n
+            if lat_n!=None:
+                result.latitude=lat_n
+            if long_n!=None:
+                result.longitude=long_n
+            if loc_n!=None:
+                result.location=loc_n
+            try:
+                session.commit()
+                return True
+            except Exception as err:
+                print(err)
+                session.rollback()
+                return False
+
 def add_user(entry):
     #entry is a user object
     try:
@@ -141,11 +168,20 @@ def return_video(id,link):
         return False
 
 def updateLikes(link,upOrDown):
-    video = session.query(post).filter(post.link == link).first()
+    video = session.query(post).filter(post.link == link).scalar()
     author = session.query(user).filter(user.userid == video.author).scalar()
-    video.likes += upOrDown
-    author.points += upOrDown
-    session.commit()
+    if (video!=None) or (author!=None):
+        video.likes += upOrDown
+        author.points += upOrDown
+        try:
+            session.commit()
+            return True
+        except Exception as err:
+            print(err)
+            session.rollback()
+            return False
+    else:
+        return False
     
 def post_query_radius(latitude, longitude, radius): #assuming radius is in miles for now
     matches=[]
