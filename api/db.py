@@ -111,6 +111,24 @@ def add_post(entry):
         session.rollback()
         return False
 
+def search(find_s):
+    try:
+        results=geocoder.geocode(find_s,no_annotations='1')
+        if results and len(results):
+            longitude=results[0]['geometry']['lat']
+            latitude=results[0]['geometry']['lng']
+            post_mtch=session.query(post).filter(post.description.like("%"+find_s+"%")).all()
+            ret={
+                "coord":(latitude,longitude),
+                "posts": post_mtch
+            }
+            return ret
+        else:
+            return None
+    except Exception as err:
+        print(err)
+        return None
+
 def modify_post(link_n,author_n=None,desc_n=None,likes_n=None,lat_n=None,long_n=None,loc_n=None):
     #use keywords as arguements, only changes for those given
         result=session.query(post).filter(post.link==link_n).scalar()
