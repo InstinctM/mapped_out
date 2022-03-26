@@ -111,18 +111,22 @@ def add_post(entry):
         session.rollback()
         return False
 
-def search(find_s):
+def search_location(find_s):
     try:
         results=geocoder.geocode(find_s,no_annotations='1')
         if results and len(results):
             longitude=results[0]['geometry']['lat']
             latitude=results[0]['geometry']['lng']
+            return (latitude, longitude)
+            """
             post_mtch=session.query(post).filter(post.description.like("%"+find_s+"%")).all()
+            #if want to search posts aswell
             ret={
                 "coord":(latitude,longitude),
                 "posts": post_mtch
             }
             return ret
+            """
         else:
             return None
     except Exception as err:
