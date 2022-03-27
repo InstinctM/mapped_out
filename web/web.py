@@ -37,3 +37,7 @@ def postVideo():
 @app.route("/country-select", methods = ["GET"])
 def countrySelect():
     return render_template("country-select.html")
+
+@app.route("/leaderboard", methods = ["GET"])
+def leaderboard():
+    return render_template("leaderboard.html")

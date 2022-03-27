@@ -111,7 +111,7 @@
         }, (response) => {
             let result = response["result"];
             if (result == "success") {
-                alert("Successfully update user profile");
+                //alert("Successfully update user profile");
                 localStorage.setItem("username", username);
                 location.replace("/login");
             } else if (result == "username-taken") {

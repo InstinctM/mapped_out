@@ -188,3 +188,7 @@ def update_likes(request : Like_or_Dislike):
 def getUser(userid : str):
     useridint = int(userid)
     return LoginAuthentication.getUserProfile(useridint)
+
+@app.get('/get-users')
+def getUsers():
+    return LoginAuthentication.getAllUsers()

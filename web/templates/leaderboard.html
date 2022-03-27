@@ -1,0 +1,48 @@
+{%extends "base.html" %}
+
+<!-- Change the title of this page HERE -->
+{%block title%}User{%endblock%}
+
+
+{%block content%}
+
+<div class="container m-auto">
+    <div class="col-6 m-auto justify-content-center">
+        <h1 id="welcome-txt" class="my-4">Leaderboard</h1>
+
+        <table id="leader-table" class="table table-bordered"></table>
+    </div>
+</div>
+
+<script>
+    loadLeaderboard();
+    function loadLeaderboard() {
+        httpGet(API_URL + "/get-users", {}, (response) => {
+            if (response["result"] == "success") {
+                let tableContent = `
+                    <tr class="table-primary">
+                    <th>Username</th><th>Country</th><th>Points</th>
+                    </tr>
+                `;
+                let i = 0;
+                response["users"].forEach((user) => {
+                    let flagSrc = `https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/4.1.5/flags/4x3/${user["country"].toLowerCase()}.svg`;
+                    tableContent += `
+                        <tr>
+                        <td>${user["username"]}</td>
+                        <td><img src="${flagSrc}" width="36" height="27"/></td>
+                        <td>${user["points"]}</td>
+                        </tr>
+                    `;
+                    i++;
+                });
+
+                document.getElementById("leader-table").innerHTML = tableContent;
+            } else {
+                console.log(response);
+            }
+        });
+    }
+</script>
+
+{%endblock%}

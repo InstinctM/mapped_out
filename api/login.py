@@ -152,3 +152,18 @@ class LoginAuthentication:
             "country": user.country,
             "points": user.points
         }
+
+    @classmethod
+    def getAllUsers(cls):
+        ret = []
+        users = db.session.query(db.user).order_by(db.user.points.desc()).all()
+        if (users == None):
+            return {"result": "no-users"}
+        for user in users:
+            ret.append({
+                "userid": user.userid,
+                "username": user.username,
+                "country": user.country,
+                "points": user.points,
+            })
+        return {"result": "success", "users": ret}
