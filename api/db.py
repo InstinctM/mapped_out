@@ -111,6 +111,81 @@ def add_post(entry):
         session.rollback()
         return False
 
+def search_location(find_s):
+    try:
+        results=geocoder.geocode(find_s,no_annotations='1')
+        if results and len(results):
+            longitude=results[0]['geometry']['lat']
+            latitude=results[0]['geometry']['lng']
+            return (latitude, longitude)
+            """
+            post_mtch=session.query(post).filter(post.description.like("%"+find_s+"%")).all()
+            #if want to search posts aswell
+            ret={
+                "coord":(latitude,longitude),
+                "posts": post_mtch
+            }
+            return ret
+            """
+        else:
+            return None
+    except Exception as err:
+        print(err)
+        return None
+
+def modify_post(link_n,newlink_n=None,author_n=None,desc_n=None,likes_n=None,lat_n=None,long_n=None,loc_n=None):
+    #use keywords as arguements, only changes for those given
+    result=session.query(post).filter(post.link==link_n).scalar()
+    if result==None:
+        return False
+    else:
+        #this is lazy and makes me look like i did a lot of hard coding ;)
+        if newlink_n!=None:
+            result.link=newlink_n
+        if author_n!=None:
+            result.author=author_n
+        if desc_n!=None:
+            result.description=desc_n
+        if likes_n!=None:
+            result.likes=likes_n
+        if lat_n!=None:
+            result.latitude=lat_n
+        if long_n!=None:
+            result.longitude=long_n
+        if loc_n!=None:
+            result.location=loc_n
+        
+        #reverse geocode
+        tries=0
+        while(tries<4):
+            try:
+                geocode_results=geocoder.reverse_geocode(result.latitude,result.longitude,language='en')
+                if geocode_results and len(geocode_results):
+                    loc=geocode_results[0]['formatted']
+                    result.location=loc
+                    break
+                else:
+                    tries+=1
+                    continue
+            except RateLimitExceededError as err:
+                print(err)
+                print("---- Opencage Rate Limit.")
+                sleep(1)
+                tries+=1
+                continue
+            except InvalidInputError as err:
+                print(err)
+                break
+
+
+        try:
+            session.commit()
+            return True
+        except Exception as err:
+            print(err)
+            session.rollback()
+            return False
+
 def add_user(entry):
     #entry is a user object
     try:
@@ -141,11 +216,20 @@ def return_video(id,link):
         return False
 
 def updateLikes(link,upOrDown):
-    video = session.query(post).filter(post.link == link).first()
+    video = session.query(post).filter(post.link == link).scalar()
     author = session.query(user).filter(user.userid == video.author).scalar()
-    video.likes += upOrDown
-    author.points += upOrDown
-    session.commit()
+    if (video!=None) or (author!=None):
+        video.likes += upOrDown
+        author.points += upOrDown
+        try:
+            session.commit()
+            return True
+        except Exception as err:
+            print(err)
+            session.rollback()
+            return False
+    else:
+        return False
     
 def post_query_radius(latitude, longitude, radius): #assuming radius is in miles for now
     matches=[]

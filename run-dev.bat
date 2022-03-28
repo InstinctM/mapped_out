@@ -2,7 +2,8 @@
 ::
 :: Script to start development server
 ::
-
+::run the following to initialise the database file (if it doesnt exist):
+::python api/init.py
 echo Killing running servers...
 taskkill /IM /F "flask.exe"
 taskkill /IM /F "uvicorn.exe"

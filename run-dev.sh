@@ -4,6 +4,9 @@
 # Script to start development server
 #
 
+#run the following to initialise the database file if it doesnt exist:
+#python api/init.py
+
 echo Killing running servers...
 killall -w flask
 killall -w uvicorn

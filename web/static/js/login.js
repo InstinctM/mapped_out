@@ -46,7 +46,7 @@ async function onSignup() {
     }, (response) => {
         console.log("Create account: " + JSON.stringify(response));
         if (response != null) {
-            alert("Successfully created a new account.");
+            //alert("Successfully created a new account.");
             location.replace("/login");
         } else {
             alert("Failed to create an account: Username is taken, please try another username.");

@@ -14,7 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from db import Session as ses, post as db_post, user as db_user, add_post,delete_video,return_video,updateLikes
-from db import post_query_radius
+from db import post_query_radius, modify_post
 from login import LoginAuthentication
 
 
@@ -103,6 +103,29 @@ def delete(request:Video_Delete):
     delete_video(video.link)
     return True
 
+class Video_Edit(BaseModel):
+    userid : int
+    token : str
+    oldlink : str
+    link : str
+    description : str
+    lat : float
+    lon : float
+
+@app.post('/edit-video')
+def edit(request:Video_Edit):
+    user = LoginAuthentication.authenticate(request.userid, request.token)
+    if user == None: # authenticate user
+        return {"result": "unauthorized"}
+    video = return_video(user.userid, request.oldlink)
+    if video == None: # authenticate user
+        return {"result": "no-video"}
+    result = modify_post(request.oldlink,newlink_n=request.link,
+        lat_n=request.lat, long_n=request.lon, desc_n=request.description)
+    if (result):
+        return {"result": "success"}
+    return {"result": "failed"}
+
 
 # User Sign UP
 class UserSignUp (BaseModel):
@@ -165,3 +188,7 @@ def update_likes(request : Like_or_Dislike):
 def getUser(userid : str):
     useridint = int(userid)
     return LoginAuthentication.getUserProfile(useridint)
+
+@app.get('/get-users')
+def getUsers():
+    return LoginAuthentication.getAllUsers()
