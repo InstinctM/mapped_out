@@ -21,7 +21,7 @@
             if (response["result"] == "success") {
                 let tableContent = `
                     <tr class="table-primary">
-                    <th>Username</th><th>Country</th><th>Points</th>
+                        <th>Rank</th><th>Username</th><th>Country</th><th>Points</th>
                     </tr>
                 `;
                 let i = 0;
@@ -29,6 +29,7 @@
                     let flagSrc = `https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/4.1.5/flags/4x3/${user["country"].toLowerCase()}.svg`;
                     tableContent += `
                         <tr>
+                        <td>${i + 1}</td>
                         <td>${user["username"]}</td>
                         <td><img src="${flagSrc}" width="36" height="27"/></td>
                         <td>${user["points"]}</td>

@@ -92,8 +92,9 @@ class LoginAuthentication:
         try:
             idinfo = id_token.verify_oauth2_token(credential, requests.Request(), cls.GOOGLE_CLIENT_ID)
             userId = hash(idinfo['sub'])
-            username = idinfo['name']
-        except ValueError:
+            username = str(idinfo['name']).replace(" ", "")
+        except ValueError as err:
+            print(err)
             return None
 
         # Check if userid exist in db
@@ -101,7 +102,7 @@ class LoginAuthentication:
         user = db.session.query(db.user).filter_by(userid=userId).scalar()
         if (user == None):
             # Create user with no password, indicating user signs in with google
-            user = db.user(userId, username, "", "", 0, "Country", 0)
+            user = db.user(userId, username, "", "", 0, "GB", 0)
         user.token = secrets.token_hex(32)
         user.tokenExpire = int(time.time() + cls.EXPIRE_TIME)
 
