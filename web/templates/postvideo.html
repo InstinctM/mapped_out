@@ -46,14 +46,14 @@
         <button type="button" id="post-btn" class="btn btn-primary btn-lg btn-block mb-2" style="width: 100%;"
             onclick="onPostVideo()">Post</button>
         <button type="button" class="btn btn-link btn-block" style="width: 100%;"
-            onclick="location.replace('/')">Cancel</button>
+            onclick="location.replace('/web')">Cancel</button>
     </div>
 </div>
 
-<script src="../static/js/postvideo.js"></script>
+<script src="/web/static/js/postvideo.js"></script>
 <script>
     if (!checkLoginStatus()) {
-        location.replace("/login");
+        location.replace("/web/login");
     }
 </script>
 
