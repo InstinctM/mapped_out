@@ -10,13 +10,12 @@ The FrontEnd Should be able to :
 
 from typing import final
 from fastapi import FastAPI,Depends
-#from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from db import Session as ses, post as db_post, user as db_user, add_post,delete_video,return_video,updateLikes
 from db import post_query_radius, modify_post, search
 from login import LoginAuthentication
-
 
 import sys
 sys.path.append("../web")
@@ -29,15 +28,20 @@ app.mount("/",WSGIMiddleware(web.app))
 
 """
     Allow CORS
+"""
 app.add_middleware(
     CORSMiddleware,
     allow_origins = [
+        "http://localhost:8000",
         "http://localhost:8080",
+        "http://0.0.0.0:8080",
+        "http://0.0.0.0:8000",
+
     ],
     allow_credentials = True,
     allow_methods = ["*"],
     allow_headers = ["*"],
-)"""
+)
 
 def get_db():
     db = ses()
