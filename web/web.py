@@ -45,7 +45,3 @@ def countrySelect():
 def leaderboard():
     return render_template("leaderboard.html")
 
-@app.route("/static/js/share.js",methods=["GET"])
-def setPort():
-    print("ok.")
-    return render_template("share.js")
