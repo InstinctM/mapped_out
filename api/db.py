@@ -111,27 +111,35 @@ def add_post(entry):
         session.rollback()
         return False
 
-def search_location(find_s):
-    try:
-        results=geocoder.geocode(find_s,no_annotations='1')
-        if results and len(results):
-            longitude=results[0]['geometry']['lat']
-            latitude=results[0]['geometry']['lng']
-            return (latitude, longitude)
-            """
-            post_mtch=session.query(post).filter(post.description.like("%"+find_s+"%")).all()
-            #if want to search posts aswell
-            ret={
-                "coord":(latitude,longitude),
-                "posts": post_mtch
-            }
-            return ret
-            """
-        else:
-            return None
-    except Exception as err:
-        print(err)
-        return None
+def search(find_s):
+    ret={
+        "coord": (None,None),
+        "posts": None,
+        "users": None
+    }
+    tries=0
+    while(tries<4):
+        try:
+            results=geocoder.geocode(find_s,no_annotations='1')
+            if results and len(results):
+                latitude=results[0]['geometry']['lat']
+                longitude=results[0]['geometry']['lng']
+                ret["coord"]=(latitude,longitude)
+                break
+            else:
+                tries+=1
+                continue
+        except RateLimitExceededError as err:
+            print("---- OpenCage Rate Limit.")
+            sleep(1)
+            tries+=1
+            continue
+        except InvalidInputError as err:
+            print(err)
+            break
+    ret["posts"]=session.query(post).filter(post.description.like("%"+find_s+"%")).all()
+    ret["users"]=session.query(user).filter(user.username.like("%"+find_s+"%")).all()
+    return ret
 
 def modify_post(link_n,newlink_n=None,author_n=None,desc_n=None,likes_n=None,lat_n=None,long_n=None,loc_n=None):
     #use keywords as arguements, only changes for those given
