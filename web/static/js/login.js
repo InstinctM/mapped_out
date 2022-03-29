@@ -54,7 +54,7 @@ async function onSignup() {
         console.log("Create account: " + JSON.stringify(response));
         if (response != null) {
             //alert("Successfully created a new account.");
-            location.replace("/login");
+            location.replace("/web/login");
         } else {
             alert("Failed to create an account: Username is taken, please try another username.");
         }
@@ -118,5 +118,5 @@ function onGoogleLogin(response) {
 
 function onLogout() {
     logoutAll();
-    location.replace("/login");
+    location.replace("/web/login");
 }

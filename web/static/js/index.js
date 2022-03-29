@@ -21,7 +21,7 @@ function updateNavBtns() {
 let firstTime = localStorage.getItem("first-time");
 if (firstTime == null) {
     localStorage.setItem("first-time", false);
-    location.replace("/about");
+    location.replace("/web/about");
 }
 
 function onNavSearch() {
@@ -61,7 +61,7 @@ function onNavSearch() {
 
 
 function gotoPost(lat, lon) {
-    location.replace(`/?latitude=${lat}&longitude=${lon}`);
+    location.replace(`/web/?latitude=${lat}&longitude=${lon}`);
 }
 
 
