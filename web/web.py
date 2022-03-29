@@ -1,8 +1,5 @@
 from flask import Flask, request, render_template
 
-import os
-port=os.environ.get('PORT',8000)
-
 # the following line loads the static folder into memory this means that when the server is running you cannot change the files that are displayed to the user
 # without restarting the server, so if you make changes and want to see them restart the server
 app = Flask(__name__, static_folder='static')
