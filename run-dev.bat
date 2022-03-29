@@ -14,4 +14,4 @@ set PYTHONHASHSEED=0
 echo Starting FastAPI server...
 
 cd api
-start uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+start uvicorn main:app --host localhost --port 8000 --reload

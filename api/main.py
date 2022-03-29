@@ -7,9 +7,8 @@ The FrontEnd Should be able to :
     More Features Implementable in due course.
 """
 
-
-from typing import final
-from fastapi import FastAPI,Depends
+from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -28,7 +27,7 @@ app.mount("/web",WSGIMiddleware(web.app))
 
 """
     Allow CORS
-
+"""
 app.add_middleware(
     CORSMiddleware,
     allow_origins = [
@@ -42,7 +41,6 @@ app.add_middleware(
     allow_methods = ["*"],
     allow_headers = ["*"],
 )
-"""
 
 def get_db():
     db = ses()
@@ -55,7 +53,7 @@ def get_db():
 ### Endpoints
 @app.get("/")
 def root():
-    pass
+    return RedirectResponse("/web",302)
 
 # Post new user video! 
 class Video_Post (BaseModel):
