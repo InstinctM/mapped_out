@@ -48,4 +48,4 @@ def leaderboard():
 @app.route("/static/js/share.js",methods=["GET"])
 def setPort():
     print("ok.")
-    return render_template("share.js",PORT=port)
+    return render_template("share.js")
