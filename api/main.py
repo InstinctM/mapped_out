@@ -15,9 +15,6 @@ from sqlalchemy.orm import Session
 from db import Session as ses, post as db_post, user as db_user, add_post,delete_video,return_video,updateLikes
 from db import post_query_radius, modify_post, search
 from login import LoginAuthentication
-import os
-
-print(os.environ.get('PORT',"0"))
 
 import sys
 sys.path.append("../web")
