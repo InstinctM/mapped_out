@@ -30,7 +30,19 @@ const heatLayer = L.heatLayer([], { radius: heatMapRad }).addTo(map);
 map.on('click', onMapClick);
 map.on('moveend', onMapMove);
 
-getUserLocation();
+setView();
+
+function setView() {
+    let param = new URLSearchParams(location.search);
+    let lat = param.get("latitude");
+    let lon = param.get("longitude");
+    if (lat != null && lon != null) {
+        map.setView([lat, lon], defaultZoom);
+        onMapMove(null);
+    } else {
+        getUserLocation();
+    }
+}
 
 function getUserLocation() {
     // Call some geolocation api to get user's location

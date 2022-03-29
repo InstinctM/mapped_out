@@ -1,3 +1,30 @@
 #navbar {
     background-color: #224499;
 }
+
+#search-result {
+    position: absolute;
+    background-color: #fff;
+    z-index: 100000;
+    overflow: auto;
+    max-height: 480px;
+}
+
+.search-post-entry {
+    padding: 10px;
+}
+.search-post-entry:hover {
+    background-color: #aaa;
+    cursor: pointer;
+}
+.search-post-entry h5 {
+    font-size: 12px;
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+}
+.search-post-entry p {
+    font-size: 10px;
+    margin: 4px 8px;
+    padding: 0;
+}
