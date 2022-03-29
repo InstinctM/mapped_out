@@ -9,13 +9,17 @@
 <div class="container m-auto">
     <div class="col-6 m-auto justify-content-center">
         <h1 id="welcome-txt" class="my-4">Welcome {username}</h1>
+        <div>
+            <svg id="avatar" width="400" height="400">
 
+            </svg>
+        </div>
         <div class="row my-2 justify-content-between align-items-center">
             <h5 class="col-5">Country: <span id="country">---<span></h5>
             <img id="country-flag" class="col-2" width="48" height="36" />
             <h5 class="col-4">Points: <span id="points">---</span></h5>
         </div>
-        <a class="link-primary" href="/user-edit">Edit profile and Change password</a>
+        <a class="link-primary" id="edit" href="/user-edit">Edit profile and Change password</a>
 
         <div style="height: 100px;"></div>
 
@@ -43,6 +47,12 @@
                 document.getElementById("country").innerText = country;
                 document.getElementById("country-flag").src =
                     `https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/4.1.5/flags/4x3/${countryAlpha2.toLowerCase()}.svg`;
+                let url = `https://avatars.dicebear.com/api/avataaars/${username}.svg`;
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.open( "GET", url, false ); // false for synchronous request
+                xmlHttp.send( null );
+                document.getElementById("avatar").innerHTML = xmlHttp.responseText;
+                document.getElementById("avatar").style.background = `url(https://countryflagsapi.com/png/${country})`;
                 document.getElementById("points").innerText = response["points"];
             } else {
                 console.log("Failed to get user profile.");

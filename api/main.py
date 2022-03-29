@@ -128,14 +128,20 @@ def edit(request:Video_Edit):
 
 
 @app.get('/search-post')
-def searchPost(kw : str):
+def searchPost(kw : str, mode : str):
     result = search(kw)
-    lat, lon = result["coord"]
-    if (lat == None or lon == None):
-        return {"result": "noresult"}
-    print(f"Search location: {lat}, {lon}")
-    posts = post_query_radius(lat, lon, 100)
-    return {"result": "success", "posts": posts}
+    if (mode == "location"):
+        lat, lon = result["coord"]
+        if (lat == None or lon == None):
+            return {"result": "noresult"}
+        print(f"Search location: {lat}, {lon}")
+        posts = post_query_radius(lat, lon, 100)
+        if (posts["result"] != "success"):
+            return {"result": "failedposts"}
+        return {"result": "success", "posts": posts["posts"]}
+    elif (mode == "title"):
+        return {"result": "success", "posts": result["posts"]}
+    return {"result": "invalid-mode"}
 
 
 
