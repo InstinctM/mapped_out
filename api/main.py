@@ -24,11 +24,11 @@ from fastapi.middleware.wsgi import WSGIMiddleware
 
 app = FastAPI() 
 
-app.mount("/",WSGIMiddleware(web.app))
+app.mount("/web",WSGIMiddleware(web.app))
 
 """
     Allow CORS
-"""
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins = [
@@ -42,6 +42,7 @@ app.add_middleware(
     allow_methods = ["*"],
     allow_headers = ["*"],
 )
+"""
 
 def get_db():
     db = ses()
