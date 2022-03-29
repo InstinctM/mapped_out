@@ -14,7 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from db import Session as ses, post as db_post, user as db_user, add_post,delete_video,return_video,updateLikes
-from db import post_query_radius, modify_post
+from db import post_query_radius, modify_post, search
 from login import LoginAuthentication
 
 
@@ -125,6 +125,18 @@ def edit(request:Video_Edit):
     if (result):
         return {"result": "success"}
     return {"result": "failed"}
+
+
+@app.get('/search-post')
+def searchPost(kw : str):
+    result = search(kw)
+    lat, lon = result["coord"]
+    if (lat == None or lon == None):
+        return {"result": "noresult"}
+    print(f"Search location: {lat}, {lon}")
+    posts = post_query_radius(lat, lon, 100)
+    return {"result": "success", "posts": posts}
+
 
 
 # User Sign UP
