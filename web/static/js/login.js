@@ -1,9 +1,16 @@
 async function hashPassword(password) {
+    let hash = new jsSHA("SHA-256", "TEXT", { encoding: "UTF8" });
+    hash.update(password);
+    let hashed = hash.getHash("HEX");
+    return hashed;
+
+    /* Legacy code
     let passwordBytes = new TextEncoder().encode(password);
     let hashedBytes = await window.crypto.subtle.digest("SHA-256", passwordBytes);
     let hashedArray = Array.from(new Uint8Array(hashedBytes));
     let hashed = hashedArray.map((bytes) => bytes.toString(16).padStart(2, "0")).join("");
     return hashed;
+    */
 }
 
 function validateUsername(username) {
