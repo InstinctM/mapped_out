@@ -41,3 +41,4 @@ def countrySelect():
 @app.route("/leaderboard", methods = ["GET"])
 def leaderboard():
     return render_template("leaderboard.html")
+

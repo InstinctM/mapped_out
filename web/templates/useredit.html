@@ -37,13 +37,13 @@
         </div>
 
         <div class="btn-group" role="group">
-            <button type="button" class="btn btn-outline-secondary" onclick="location.replace('/login')">Cancel</button>
+            <button type="button" class="btn btn-outline-secondary" onclick="location.replace('/web/login')">Cancel</button>
             <button type="button" class="btn btn-success" onclick="onChangeUserProfile()">Confirm</button>
         </div>
     </div>
 </div>
 
-<script src="../static/js/login.js"></script>
+<script src="/web/static/js/login.js"></script>
 <script>
     initInput();
     function initInput() {
@@ -113,7 +113,7 @@
             if (result == "success") {
                 //alert("Successfully update user profile");
                 localStorage.setItem("username", username);
-                location.replace("/login");
+                location.replace("/web/login");
             } else if (result == "username-taken") {
                 alert("Failed to update profile: Username is taken, try another username.");
             } else if (result == "wrong-old-password") {
