@@ -130,9 +130,9 @@ def edit(request:Video_Edit):
 @app.get('/search-post')
 def searchPost(kw : str):
     result = search_location(kw)
-    if (result == None):
+    lat, lon = result["coord"]
+    if (lat == None or lon == None):
         return {"result": "noresult"}
-    lat, lon = result
     print(f"Search location: {lat}, {lon}")
     posts = post_query_radius(lat, lon, 100)
     return {"result": "success", "posts": posts}
