@@ -1,4 +1,4 @@
-const API_URL = "http://0.0.0.0:{{PORT}}";
+const API_URL = "http://mappedout.uk:{{PORT}}";
 const GOOGLE_CLIENT_ID = "1047753082993-1iftbpo90ar6die9le8hffheu3pscik0.apps.googleusercontent.com";
 
 function httpGet(url, data, callback) {
