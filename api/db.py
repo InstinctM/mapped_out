@@ -115,8 +115,8 @@ def search_location(find_s):
     try:
         results=geocoder.geocode(find_s,no_annotations='1')
         if results and len(results):
-            longitude=results[0]['geometry']['lat']
-            latitude=results[0]['geometry']['lng']
+            latitude=results[0]['geometry']['lat']
+            longitude=results[0]['geometry']['lng']
             return (latitude, longitude)
             """
             post_mtch=session.query(post).filter(post.description.like("%"+find_s+"%")).all()

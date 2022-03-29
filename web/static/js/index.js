@@ -18,3 +18,12 @@ if (firstTime == null) {
     localStorage.setItem("first-time", false);
     location.replace("/about");
 }
+
+function onNavSearch() {
+    let kw = document.getElementById("search").value;
+    httpGet(API_URL + "/search-post", {
+        kw: kw,
+    }, (response) => {
+        console.log(response);
+    });
+}
