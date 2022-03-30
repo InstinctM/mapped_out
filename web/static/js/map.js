@@ -30,6 +30,7 @@ const heatLayer = L.heatLayer([], { radius: heatMapRad }).addTo(map);
 map.on('click', onMapClick);
 map.on('moveend', onMapMove);
 
+loadPosts();
 setView();
 
 function setView() {

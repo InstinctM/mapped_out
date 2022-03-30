@@ -27,11 +27,12 @@ if (firstTime == null) {
 function onNavSearch() {
     let kw = searchbox.value;
     resultbox.style.display = "none";
+    let resultContent = "";
+
     httpGet(API_URL + "/search-post", {
         kw: kw,
-        mode: "location",
+        mode: "post",
     }, (response) => {
-        let resultContent = "";
         if (response["result"] == "success") {
             if (response["posts"].length == 0) {
                 resultContent += `<div class="search-post-entry"><p>No result</p></div>`;
@@ -53,7 +54,6 @@ function onNavSearch() {
         let searchboxWidth = searchbox.offsetWidth;
         resultbox.style.width = searchboxWidth + "px";
         resultbox.innerHTML = resultContent;
-        console.log(resultContent);
         resultbox.style.display = "block";
     });
 }

@@ -113,6 +113,7 @@ def add_post(entry):
 
 def search(find_s):
     ret={
+        "location": None,
         "coord": (None,None),
         "posts": None,
         "users": None
@@ -137,6 +138,7 @@ def search(find_s):
         except InvalidInputError as err:
             print(err)
             break
+    ret["location"]=session.query(post).filter(post.location.like("%"+find_s+"%")).all()
     ret["posts"]=session.query(post).filter(post.description.like("%"+find_s+"%")).all()
     ret["users"]=session.query(user).filter(user.username.like("%"+find_s+"%")).all()
     return ret

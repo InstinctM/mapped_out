@@ -120,19 +120,33 @@ def edit(request:Video_Edit):
 @app.get('/search-post')
 def searchPost(kw : str, mode : str):
     result = search(kw)
-    if (mode == "location"):
+    if (mode == "coord"):
         lat, lon = result["coord"]
         if (lat == None or lon == None):
-            return {"result": "noresult"}
-        print(f"Search location: {lat}, {lon}")
-        posts = post_query_radius(lat, lon, 100)
-        if (posts["result"] != "success"):
-            return {"result": "failedposts"}
-        return {"result": "success", "posts": posts["posts"]}
-    elif (mode == "title"):
-        return {"result": "success", "posts": result["posts"]}
+            return {"result": "notfound"}
+        return {"result": "success", "latitude": lat, "longitude": lon}
+    elif (mode == "post"):
+        joined = result["location"] + result["posts"]
+        joined = list(dict.fromkeys(joined)) # remove duplicate
+        posts = []
+        for post in joined:
+            author = LoginAuthentication.getUserProfile(post.author)
+            if (author == None):
+                continue
+            posts.append({
+                "username": author["username"],
+                "link": post.link,
+                "description": post.description,
+                "location": post.location,
+                "latitude": post.latitude,
+                "longitude": post.longitude,
+                "likes": post.likes,
+            })
+        
+        return {"result": "success", "posts": posts}
+    elif (mode == "user"):
+        return {"result": "success", "posts": result["users"]}
     return {"result": "invalid-mode"}
-
 
 
 # User Sign UP
