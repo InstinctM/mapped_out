@@ -239,6 +239,7 @@ a {
     background-color: #000000;
     color: #eee;
     position:fixed;
+    z-index: 1000;
   }
 
   nav:hover{

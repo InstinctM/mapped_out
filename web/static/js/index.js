@@ -17,13 +17,6 @@ function updateNavBtns() {
 
 }
 
-
-let firstTime = localStorage.getItem("first-time");
-if (firstTime == null) {
-    localStorage.setItem("first-time", false);
-    location.replace("/web/about");
-}
-
 function onNavSearch() {
     let kw = searchbox.value;
     resultbox.style.display = "none";

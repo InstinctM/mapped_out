@@ -27,7 +27,8 @@ L.tileLayer(
 
 const heatLayer = L.heatLayer([], { radius: heatMapRad }).addTo(map);
 
-map.on('click', onMapClick);
+map.on('dblclick', onMapClick);  // double left click
+map.on('contextmenu', onMapClick);  // right click
 map.on('moveend', onMapMove);
 
 loadPosts();
