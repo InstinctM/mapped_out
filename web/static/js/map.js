@@ -155,7 +155,7 @@ function onMapClick(e) {
             <div class="row justify-content-between" style="width: 260px;">
                 <div class="btn-group" role="group">
                     <button class="btn btn-primary" onclick="newPost(${lat}, ${lon})">Create New Post</button>
-                    <button class="btn" style="color: gray;" onclick="closeNewPostPopup()"><i class="bi bi-x"></i></button>
+                    <button class="btn" style="color: gray;" title="Close" onclick="closeNewPostPopup()"><i class="bi bi-x"></i></button>
                 </div>
             </div>
         `;
@@ -189,8 +189,8 @@ function getPopupElement(post) {
     let deleteBtn = "";
     let editBtn = "";
     if (username == post["username"]) { // only display delete button if it is this user's video
-        deleteBtn = `<button type="button" class="btn btn-danger" onclick="deleteVideo('${link}')"> <i class="bi bi-trash-fill"></i> </button>`;
-        editBtn = `<button type="button" class="btn btn-light" onclick="editVideo('${link}')"> <i class="bi bi-pencil-fill"></i> </button>`;
+        deleteBtn = `<button type="button" class="btn btn-danger" title="Delete Post" onclick="deleteVideo('${link}')"> <i class="bi bi-trash-fill"></i> </button>`;
+        editBtn = `<button type="button" class="btn btn-light" title="Edit Post" onclick="editVideo('${link}')"> <i class="bi bi-pencil-fill"></i> </button>`;
     }
 
     let popupElement = `
@@ -208,9 +208,9 @@ function getPopupElement(post) {
 
         <div class="row justify-content-between" style="width: 480px;">
             <div class="col-2 btn-group">
-                <button type="button" class="btn btn-outline-primary" onclick="updateLikes('${link}',true)">
+                <button type="button" class="btn btn-outline-primary" title="Like" onclick="updateLikes('${link}',true)">
                     <i class="bi bi-hand-thumbs-up-fill"></i> </button>
-                <button type="button" class="btn btn-outline-secondary" onclick="updateLikes('${link}',false)">
+                <button type="button" class="btn btn-outline-secondary" title="Dislike" onclick="updateLikes('${link}',false)">
                     <i class="bi bi-hand-thumbs-down-fill"></i> </button>
             </div>
             <div class="col-2 btn-group">

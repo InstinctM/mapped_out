@@ -33,7 +33,6 @@ function hideCookiePrompt() {
 
 // Check cookie consent
 document.addEventListener("scroll", (e) => {
-    console.log(this.scrollY, document.documentElement.clientHeight);
     // only show when scrolled down
     if (this.scrollY > document.documentElement.clientHeight) {
         let cookieAccept = localStorage.getItem("cookie-accept");
