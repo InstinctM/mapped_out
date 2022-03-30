@@ -53,7 +53,7 @@
             userid: localStorage.getItem("userid"),
         }, (response) => {
             if (response["result"] == "success") {
-                httpGet("/country-select", {}, (html) => {
+                httpGet("/web/country-select", {}, (html) => {
                     document.getElementById("country-select").innerHTML = html;
                     document.getElementById("country-select").children[0].value = response["country"];
                 });

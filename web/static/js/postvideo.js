@@ -91,10 +91,10 @@ function onPostVideo() {  // Or edit if url parameter has link specified
         }, (response) => {
             console.log(response);
             if (response["result"] == "success") {
-                location.replace("/");
+                location.replace("/web/");
             } else if (response["result"] == "unauthorized") {
                 logoutAll();
-                location.replace("/login");
+                location.replace("/web/login");
             } else {
                 alert("Failed to edit post: " + JSON.stringify(response));
             }
@@ -112,11 +112,11 @@ function onPostVideo() {  // Or edit if url parameter has link specified
         "location": loc,
     }, (response) => {
         if (response["result"] == "success") {
-            location.replace("/");
+            location.replace("/web/");
         } else if (response["result"] == "unauthorized") {
             alert("Error posting video: " + "Unauthorized.");
             logoutAll();
-            location.replace("/login");
+            location.replace("/web/login");
         } else {
             alert("Error posting video: " + JSON.stringify(response));
         }

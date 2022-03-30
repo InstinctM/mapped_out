@@ -113,7 +113,7 @@ function deleteVideo(userLink) {
 function editVideo(link) {
     let post = posts[link];
     let param = $.param(post);
-    location.replace("/post-video?" + param);
+    location.replace("/web/post-video?" + param);
 }
 
 function updateLikes(link, bool) {
@@ -172,7 +172,7 @@ function onMapClick(e) {
 
 function newPost(lat, lon) {
     closeNewPostPopup();
-    location.replace(`/post-video?latitude=${lat}&longitude=${lon}`);
+    location.replace(`/web/post-video?latitude=${lat}&longitude=${lon}`);
 }
 
 function closeNewPostPopup() {
