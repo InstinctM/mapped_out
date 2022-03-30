@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 const API_URL = "http://localhost:8000"; //!!! mappedout.uk for heroku, localhost:8000 for local
-=======
-const API_URL = "http://mappedout.uk";
->>>>>>> 57daada2e8fe12f8d6d61fac1d61267891648463
 const GOOGLE_CLIENT_ID = "1047753082993-1iftbpo90ar6die9le8hffheu3pscik0.apps.googleusercontent.com";
 
 function httpGet(url, data, callback) {
