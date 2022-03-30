@@ -10,7 +10,8 @@ class LoginAuthentication:
     """Handle user login authentication.
     """
 
-    GOOGLE_CLIENT_ID = "1047753082993-1iftbpo90ar6die9le8hffheu3pscik0.apps.googleusercontent.com"
+    #GOOGLE_CLIENT_ID = "1047753082993-1iftbpo90ar6die9le8hffheu3pscik0.apps.googleusercontent.com"
+    GOOGLE_CLIENT_ID = "99853795610-8lpu7g32a4d2rd0org5kpsup2ocojfr6.apps.googleusercontent.com"
     EXPIRE_TIME = 60 * 60  # Time in seconds
 
     def __init__(self, **kwargs):
