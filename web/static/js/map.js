@@ -19,7 +19,7 @@ const map = L.map('map').setView(defaultLoc, defaultZoom);  // location, zoom
 map.setMinZoom(3).setMaxBounds([[90, -200], [-90, 200]]);
 
 L.tileLayer(
-    'https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=aEvyw1adgGE2cO8JBfZJ',
+    'https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=' + MAPTILER_API_KEY,
     {
         attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
     }
