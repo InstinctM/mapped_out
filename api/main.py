@@ -35,7 +35,7 @@ def get_db():
 ### Endpoints
 @app.get("/")
 def root():
-    return RedirectResponse("/web",302)
+    return RedirectResponse("/web/about",302)
 
 # Post new user video! 
 class Video_Post (BaseModel):
