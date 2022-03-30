@@ -25,17 +25,23 @@
                     </tr>
                 `;
                 let i = 0;
+                let lastPnts = 0;
                 response["users"].forEach((user) => {
+                    if (i === 0) lastPnts = user["points"] + 1;
+                    if (user["points"] < lastPnts) {
+                        i++;
+                    }
+                    lastPnts = user["points"];
+
                     let flagSrc = `https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/4.1.5/flags/4x3/${user["country"].toLowerCase()}.svg`;
                     tableContent += `
                         <tr>
-                        <td>${i + 1}</td>
+                        <td>${i}</td>
                         <td>${user["username"]}</td>
                         <td><img src="${flagSrc}" width="36" height="27"/></td>
                         <td>${user["points"]}</td>
                         </tr>
                     `;
-                    i++;
                 });
 
                 document.getElementById("leader-table").innerHTML = tableContent;
