@@ -1,4 +1,4 @@
-const API_URL = "http://mappedout.uk"; // Leave blank, api and web now using the same server
+const API_URL = ""; // Leave blank, api and web now using the same server
 const GOOGLE_CLIENT_ID = "1047753082993-1iftbpo90ar6die9le8hffheu3pscik0.apps.googleusercontent.com";
 const MAPTILER_API_KEY = "dKiwVb68KdkDeIOnutgm";
 
