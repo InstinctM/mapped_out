@@ -9,6 +9,10 @@ The FrontEnd Should be able to :
 
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
+<<<<<<< HEAD
+=======
+from fastapi.middleware.cors import CORSMiddleware
+>>>>>>> 57daada2e8fe12f8d6d61fac1d61267891648463
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from db import Session as ses, post as db_post, user as db_user, add_post,delete_video,return_video,updateLikes
@@ -23,6 +27,26 @@ from fastapi.middleware.wsgi import WSGIMiddleware
 app = FastAPI() 
 
 app.mount("/web",WSGIMiddleware(web.app))
+<<<<<<< HEAD
+=======
+
+"""
+    Allow CORS
+"""
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins = [
+        "http://localhost:8000",
+        "http://localhost:8080",
+        "http://0.0.0.0:8080",
+        "http://0.0.0.0:8000",
+
+    ],
+    allow_credentials = True,
+    allow_methods = ["*"],
+    allow_headers = ["*"],
+)
+>>>>>>> 57daada2e8fe12f8d6d61fac1d61267891648463
 
 def get_db():
     db = ses()
