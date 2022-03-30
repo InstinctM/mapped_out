@@ -1,8 +1,10 @@
 import db
 
+"""
 confirm = input("Warning: This will clear the whole database. Do you want to continue? (y/n) ")
 if ("n" in confirm.lower()):
     exit(0)
+"""
 
 db.session.query(db.user).delete()
 db.session.query(db.post).delete()
