@@ -1,6 +1,5 @@
 const API_URL = ""; // Leave blank, api and web now using the same server
-//const GOOGLE_CLIENT_ID = "1047753082993-1iftbpo90ar6die9le8hffheu3pscik0.apps.googleusercontent.com";  // old key
-const GOOGLE_CLIENT_ID = "99853795610-8lpu7g32a4d2rd0org5kpsup2ocojfr6.apps.googleusercontent.com";  // new app + new key
+const GOOGLE_CLIENT_ID = "99853795610-8lpu7g32a4d2rd0org5kpsup2ocojfr6.apps.googleusercontent.com";
 const MAPTILER_API_KEY = "dKiwVb68KdkDeIOnutgm";
 
 function httpGet(url, data, callback) {

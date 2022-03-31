@@ -4,7 +4,8 @@ const defaultRad = 100;  // radius is in miles
 const defaultZoom = 10;  // 0-18
 
 const heatMapRad = 25;
-const heatMapWeight = 100;
+const heatMapLikesFactor = 5;
+const heatMapBase = 10;
 
 
 
@@ -81,6 +82,7 @@ function loadPosts(lat = defaultLoc[0], lon = defaultLoc[1], rad = defaultRad) {
                     let marker = L.marker([lat, lon]).addTo(map);
                     marker.bindPopup(getPopupElement(post), { maxWidth: "auto" });
                     videoMarkers[link] = marker;
+                    let heatMapWeight = heatMapBase + Math.abs(post["likes"]) * heatMapLikesFactor;
                     heatLayer.addLatLng([lat, lon, heatMapWeight]);
                 }
             });
