@@ -33,25 +33,7 @@
      </div>
 
 
-     <div class="mx-auto" style="width: 288px; display: block;">
-        <div id="google-login-btn" class="mx-auto"></div>
-        <div id="g_id_onload"
-             data-client_id="1047753082993-1iftbpo90ar6die9le8hffheu3pscik0.apps.googleusercontent.com"
-             data-context="signin"
-             data-ux_mode="popup"
-             data-callback="onGoogleLogin"
-             data-auto_prompt="false">
-        </div>
-
-        <div class="g_id_signin"
-             data-type="standard"
-             data-shape="rectangular"
-             data-theme="filled_blue"
-             data-text="signin_with"
-             data-size="large"
-             data-logo_alignment="left"
-             data-width="288">
-        </div>
+     <div id="google-render-btn" class="mx-auto" style="width: 288px; display: block;">
      </div>
 
    </div> 
@@ -68,6 +50,27 @@
             onLogin();
         }
     });
+
+    document.getElementById("google-render-btn").innerHTML = `
+        <div id="google-login-btn" class="mx-auto"></div>
+        <div id="g_id_onload"
+             data-client_id="${GOOGLE_CLIENT_ID}"
+             data-context="signin"
+             data-ux_mode="popup"
+             data-callback="onGoogleLogin"
+             data-auto_prompt="false">
+        </div>
+
+        <div class="g_id_signin"
+             data-type="standard"
+             data-shape="rectangular"
+             data-theme="filled_blue"
+             data-text="signin_with"
+             data-size="large"
+             data-logo_alignment="left"
+             data-width="288">
+        </div>
+    `;
 </script>
 
 {%endblock%}

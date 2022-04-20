@@ -9,20 +9,29 @@ The FrontEnd Should be able to :
 
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
+from fastapi.middleware.wsgi import WSGIMiddleware
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from db import Session as ses, post as db_post, user as db_user, add_post,delete_video,return_video,updateLikes
 from db import post_query_radius, modify_post, search
 from login import LoginAuthentication
-
+import os
 import sys
+
 sys.path.append("../web")
 import web
-from fastapi.middleware.wsgi import WSGIMiddleware
+
+https=os.environ.get("HTTPS","off")
 
 app = FastAPI() 
 
 app.mount("/web",WSGIMiddleware(web.app))
+
+if https=="on":
+    from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
+    from fastapi.middleware.trustedhost import TrustedHostMiddleware
+    app.add_middleware(HTTPSRedirectMiddleware)
+    app.add_middleware(TrustedHostMiddleware, allowed_hosts=["mappedout.uk", "*.mappedout.uk","localhost","*.localhost"])
 
 def get_db():
     db = ses()
