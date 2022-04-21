@@ -18,8 +18,13 @@ function checkMaptilerKey() {
             i = (i + 1) % MAPTILER_API_KEYS.length;
             MAPTILER_API_KEY = MAPTILER_API_KEYS[i];
             localStorage.setItem("maptiler_key", MAPTILER_API_KEY);
-            if (i > 0)
+            let tries = parseInt(localStorage.getItem("maptiler_key_tries") ?? "0");
+            if (tries <= MAPTILER_API_KEYS.length) { // Prevents infinite reloading
+                localStorage.setItem("maptiler_key_tries", (tries + 1).toString());
                 location.reload();  // Reload with new map api key;
+            }
+        } else {
+            localStorage.setItem("maptiler_key_tries", "0");
         }
     });
 }
