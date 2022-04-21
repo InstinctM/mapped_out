@@ -1,6 +1,29 @@
 const API_URL = ""; // Leave blank, api and web now using the same server
 const GOOGLE_CLIENT_ID = "1047753082993-1iftbpo90ar6die9le8hffheu3pscik0.apps.googleusercontent.com";
-const MAPTILER_API_KEY = "jTzI1U4mqvuOvlFqXt0T";
+const MAPTILER_API_KEYS = ["jTzI1U4mqvuOvlFqXt0T", "dKiwVb68KdkDeIOnutgm"];  // Default key at index 0
+
+
+
+var MAPTILER_API_KEY = null;
+function checkMaptilerKey() {
+    MAPTILER_API_KEY = localStorage.getItem("maptiler_key");
+    if (MAPTILER_API_KEY == null) {
+        MAPTILER_API_KEY = MAPTILER_API_KEYS[0];
+        localStorage.setItem("maptiler_key", MAPTILER_API_KEY);
+    }
+    fetch("https://api.maptiler.com/maps/streets/10/0/0.png?key=" + MAPTILER_API_KEY).then((response) => {
+        if (response.status !== 200) {
+            // Invalid API key
+            let i = MAPTILER_API_KEYS.indexOf(MAPTILER_API_KEY);
+            i = (i + 1) % MAPTILER_API_KEYS.length;
+            MAPTILER_API_KEY = MAPTILER_API_KEYS[i];
+            localStorage.setItem("maptiler_key", MAPTILER_API_KEY);
+            if (i > 0)
+                location.reload();  // Reload with new map api key;
+        }
+    });
+}
+checkMaptilerKey();
 
 function httpGet(url, data, callback) {
     $.ajax({
