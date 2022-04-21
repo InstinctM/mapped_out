@@ -223,3 +223,7 @@ def getUser(userid : str):
 @app.get('/get-users')
 def getUsers():
     return LoginAuthentication.getAllUsers()
+
+@app.get("/.well-known/pki-validation/C5A435BE736CEB8E1BE3833C3653D0B5.txt")
+def sslVerify():
+    return FileResponse("./C5A435BE736CEB8E1BE3833C3653D0B5.txt")
